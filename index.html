@@ -1,115 +1,344 @@
 <!DOCTYPE html>
-<html>
-<body>
-<h1>Hello World</h1>
-<p>I'm hosted with GitHub Pages.</p>
-<p>For the blog, please visit spelf.spelf.net.</p>
-
-
-<form action="/submit" method="post">
-  <label for="nationName">NATION NAME:</label><br>
-  <input type="text" id="nationName" name="nationName"><br>
-  <br>
-  <label for="nationPopulation">NATION POPULATION:</label><br>
-  <input type="text" id="nationPopulation" name="nationPopulation"><br>
-  <br>
-  <label for="nationSize">NATION SIZE:</label><br>
-  <select id="nationSize" name="nationSize">
-    <option value="microstate">MICROSTATE</option>
-    <option value="small">SMALL</option>
-    <option value="medium">MEDIUM</option>
-    <option value="large">LARGE</option>
-  </select>
-  <br><br>
-  <label for="community">COMMUNITY:</label><br>
-  <select id="community" name="community">
-    <option value="ixnay">IXNAY</option>
-    <option value="lesserDietstad">LESSER DIETSTAD</option>
-    <option value="tyrrenia">TYRRHENIA</option>
-    <option value="grosskiravenreich">GROSSKIRAVENREICH</option>
-    <option value="oldArdmore">OLD ARDMORE</option>
-    <option value="tastia">TASTIA</option>
-  </select>
-  <br><br>
-  <input type="submit" value="Submit">
-</form> 
-<p>Applied figures are subject to approval by moderators of each respective community.</p>
-
-  <table>
-  <tr>
-    <th>NATION NAME:</th>
-    <td>Urcea</td>
-  </tr>
-  <tr>
-    <th>POPULATION:</th>
-    <td>67,500</td>
-  </tr>
-  <tr>
-    <th>AREA:</th>
-    <td>45,000 sq mi <a href="https://www.aol.com">(See map)</a></td>
-  </tr>
-  <tr>
-    <th>COMMUNITY:</th>
-    <td>Ixnay</td>
-  </tr>
-   <tr>
-    <th>WIKI:</th>
-    <td>Urcea <a href="https://www.aol.com"></a></td>
-  </tr>
-</table>
-
-  <html>
+<html lang="en">
 <head>
-  <title>Community of Ixnay</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Legislative Game</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      background: #f9f9f9;
+      padding: 20px;
+    }
+    h1 {
+      margin-bottom: 5px;
+    }
+    .section {
+      margin-bottom: 20px;
+      padding: 10px;
+      border: 1px solid #ccc;
+      background: #fff;
+      border-radius: 6px;
+    }
+    .staff {
+      display: flex;
+      justify-content: space-between;
+      padding: 6px 0;
+      border-bottom: 1px dashed #ccc;
+    }
+    .approval {
+      margin: 0 10px;
+      padding: 5px 10px;
+      border-radius: 6px;
+      color: #fff;
+    }
+    .approval.positive {
+      background-color: green;
+    }
+    .approval.negative {
+      background-color: red;
+    }
+    .policy-input {
+      width: 100%;
+      padding: 5px;
+      margin-bottom: 5px;
+      box-sizing: border-box;
+    }
+    button {
+      padding: 5px 10px;
+      margin-top: 5px;
+      cursor: pointer;
+    }
+    .progress-bar {
+      width: 100%;
+      background: #eee;
+      border-radius: 4px;
+      overflow: hidden;
+      height: 16px;
+      margin-top: 4px;
+    }
+    .progress-fill {
+      background: #4caf50;
+      height: 100%;
+      width: 0%;
+      transition: width 0.3s;
+    }
+    #contributionLog {
+      font-size: 0.9em;
+      color: #555;
+      margin-top: 10px;
+      white-space: pre-line;
+      max-height: 150px;
+      overflow-y: auto;
+    }
+    #policyOutcome {
+      padding: 10px;
+      font-weight: bold;
+      min-height: 24px;
+    }
+    #policyOutcome.success {
+      color: green;
+    }
+    #policyOutcome.failure {
+      color: red;
+    }
+    .morale-bar {
+      width: 100px;
+      height: 10px;
+      background: #ddd;
+      border-radius: 4px;
+      overflow: hidden;
+      display: inline-block;
+      margin-left: 5px;
+    }
+    .morale-fill {
+      height: 100%;
+      background: #2196f3;
+      transition: width 0.3s;
+    }
+    #dayTracker {
+      font-size: 1.2em;
+      font-weight: bold;
+      margin-bottom: 15px;
+    }
+    #finalScore {
+      font-weight: bold;
+      margin-top: 10px;
+    }
+  </style>
 </head>
 <body>
-  <h1>COMMUNITY of IXNAY</h1>
-  <p>POPULATION: 4</p>
-  <p>WIKI: <a href="https://www.ixwiki.com">Link</a></p>
-  <p>MAP: <style>
-  img {
-    display: block;
-    margin: 0 auto;
-    max-width: 250px;
+
+<h1>Legislative Game</h1>
+<div id="dayTracker">Day: 1</div>
+
+<div class="section">
+  <h2>Approval Ratings</h2>
+  <div>
+    <span class="approval positive" id="constituentApproval">Constituent: 60</span>
+    <span class="approval positive" id="colleagueApproval">Colleague: 60</span>
+  </div>
+</div>
+
+<div class="section">
+  <h2>Create Policy</h2>
+  <input id="policyName" class="policy-input" placeholder="Policy Name" />
+  <input id="policyDesc" class="policy-input" placeholder="Policy Description" />
+  <button onclick="draftPolicy()">Draft</button>
+  <button onclick="dayOff()">DAY OFF</button>
+</div>
+
+<div class="section">
+  <h2>Staff</h2>
+  <div id="staffList"></div>
+</div>
+
+<div class="section">
+  <h2>Current Policy</h2>
+  <p id="currentPolicy">No policy in progress.</p>
+  <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+  <div id="finalScore"></div>
+  <div id="policyActions" style="display:none; text-align: center;">
+    <button onclick="proposePolicy()">Propose</button>
+    <button onclick="discardPolicy()">Discard</button>
+  </div>
+  <div id="policyOutcome"></div>
+  <div id="contributionLog"></div>
+</div>
+
+<script>
+  const staff = [
+    { name: "Chief of Staff", skill: 10, morale: 70 },
+    { name: "Legislative Director", skill: 15, morale: 80 },
+    { name: "Counsel", skill: 12, morale: 65 },
+    { name: "Comms Director", skill: 8, morale: 60 }
+  ];
+
+  let policyCounter = 1;
+  let constituentApproval = 60;
+  let colleagueApproval = 60;
+  let currentPolicy = null;
+  let draftingProgress = 0;
+  let draftingInProgress = false;
+  let contributionLog = [];
+  let day = 1;
+  let draftDaysUsed = 0;
+  const maxDraftDays = 7;
+  let autoAdvanceInterval = null;
+
+  function updateUI() {
+    document.getElementById("staffList").innerHTML = staff.map(member => {
+      const moralePercent = Math.min(100, Math.max(0, member.morale));
+      return `<div class="staff">
+        <strong>${member.name}</strong>
+        <span>Skill: ${member.skill}</span>
+        <span>Morale: ${member.morale}
+          <div class='morale-bar'>
+            <div class='morale-fill' style='width:${moralePercent}%;'></div>
+          </div>
+        </span>
+      </div>`;
+    }).join("");
+
+    document.getElementById("constituentApproval").textContent = `Constituent: ${constituentApproval}`;
+    document.getElementById("colleagueApproval").textContent = `Colleague: ${colleagueApproval}`;
+
+    document.getElementById("constituentApproval").className = `approval ${constituentApproval >= 50 ? 'positive' : 'negative'}`;
+    document.getElementById("colleagueApproval").className = `approval ${colleagueApproval >= 50 ? 'positive' : 'negative'}`;
+    document.getElementById("dayTracker").textContent = `Day: ${day}`;
+
+    if (currentPolicy) {
+      let statusText = draftingInProgress ? "Drafting..." : "Drafting complete";
+      document.getElementById("currentPolicy").textContent = `${currentPolicy.name} (${statusText})`;
+
+      // Progress bar now shows days progress out of maxDraftDays (7 days)
+      let dayProgressPercent = (draftDaysUsed / maxDraftDays) * 100;
+      if (dayProgressPercent > 100) dayProgressPercent = 100;
+      document.getElementById("progressFill").style.width = `${dayProgressPercent}%`;
+
+      document.getElementById("finalScore").textContent = `Current Score → Vision: ${currentPolicy.vision}, Research: ${currentPolicy.research}, Precision: ${currentPolicy.precision}, Publicity: ${currentPolicy.publicity}`;
+
+      // Show decision buttons only if drafting finished (progress 100% or max days reached)
+      const showDecision = !draftingInProgress && currentPolicy !== null;
+      document.getElementById("policyActions").style.display = showDecision ? "block" : "none";
+    } else {
+      document.getElementById("currentPolicy").textContent = "No policy in progress.";
+      document.getElementById("progressFill").style.width = `0%`;
+      document.getElementById("finalScore").textContent = "";
+      document.getElementById("policyActions").style.display = "none";
+    }
+
+    document.getElementById("contributionLog").innerHTML = contributionLog.join("<br>");
   }
-</style>
 
-<img src="https://ixwiki.com/images/d/d9/Map_of_Ixnay.png" alt="Map of Ixnay"></p>
-  <p>DISCORD: <a href="https://www.ixwiki.com">Link</a></p>
-  <table>
-    <tr>
-      <th>NATION NAME</th>
-      <th>POPULATION</th>
-      <th>WIKI</th>
-    </tr>
-    <tr>
-      <td><a href="https://www.ixwiki.com">Urcea</a></td>
-      <td>67,500</td>
-      <td><a href="https://www.ixwiki.com">Link</a></td>
-    </tr>
-    <tr>
-      <td><a href="https://www.ixwiki.com">Caphiria</a></td>
-      <td>67,000</td>
-      <td><a href="https://www.ixwiki.com">Link</a></td>
-    </tr>
-    <tr>
-      <td><a href="https://www.ixwiki.com">Kiravia</a></td>
-      <td>66,000</td>
-      <td><a href="https://www.ixwiki.com">Link</a></td>
-    </tr>
-    <tr>
-      <td><a href="https://www.ixwiki.com">Burgundie</a></td>
-      <td>65,000</td>
-      <td><a href="https://www.ixwiki.com">Link</a></td>
-    </tr>
-  </table>
+  function draftPolicy() {
+    if (draftingInProgress) {
+      alert("You are already drafting a policy.");
+      return;
+    }
+    const nameInput = document.getElementById("policyName").value.trim();
+    const descInput = document.getElementById("policyDesc").value.trim();
+    const name = nameInput || `Policy ${policyCounter++}`;
+    const desc = descInput || "(No Description)";
+    currentPolicy = { name, desc, vision: 0, research: 0, precision: 0, publicity: 0 };
+    draftingProgress = 0;
+    draftingInProgress = true;
+    draftDaysUsed = 0;
+    contributionLog = [`=== Day ${day} ===`];
+    document.getElementById("policyOutcome").textContent = "";
+    updateUI();
+    startAutoAdvance();
+  }
+
+  function advanceDay() {
+    if (!draftingInProgress || !currentPolicy) return;
+
+    day++;
+    draftDaysUsed++;
+    contributionLog.push(`=== Day ${day} ===`);
+
+    staff.forEach(member => {
+      let moraleFactor = member.morale / 100;
+      let contribution = member.skill * moraleFactor / 2; // scaled for balance
+
+      draftingProgress += contribution / 10;
+
+      let category;
+      switch (member.name) {
+        case "Chief of Staff": category = "vision"; break;
+        case "Legislative Director": category = "research"; break;
+        case "Counsel": category = "precision"; break;
+        case "Comms Director": category = "publicity"; break;
+        default: category = null;
+      }
+      if (category) {
+        currentPolicy[category] += Math.round(contribution);
+        contributionLog.push(`${member.name} added ${Math.round(contribution)} to ${category}`);
+      }
+
+      // Morale drops by 1 per day while working
+      member.morale = Math.max(0, member.morale - 1);
+    });
+
+    if (draftingProgress >= 100 || draftDaysUsed >= maxDraftDays) {
+      draftingProgress = Math.min(100, draftingProgress);
+      draftingInProgress = false;
+      contributionLog.push(draftDaysUsed >= maxDraftDays ? "Max drafting days reached." : "Drafting complete.");
+      stopAutoAdvance();
+    }
+
+    updateUI();
+  }
+
+  function proposePolicy() {
+    if (!currentPolicy || draftingInProgress) return;
+
+    const viability = currentPolicy.research + currentPolicy.precision;
+    const publicSupport = currentPolicy.vision + currentPolicy.publicity + (constituentApproval - 50);
+    const passChance = (viability * 0.4 + colleagueApproval * 0.4 + publicSupport * 0.2);
+    const passed = Math.random() * 100 < passChance;
+
+    if (passed) {
+      colleagueApproval = Math.min(100, colleagueApproval + 5);
+      constituentApproval = Math.min(100, constituentApproval + 5);
+      staff.forEach(m => m.morale = Math.min(100, m.morale + 10));
+      document.getElementById("policyOutcome").textContent = `PASSED! +5 to approvals. Policy Score → Vision: ${currentPolicy.vision}, Research: ${currentPolicy.research}, Precision: ${currentPolicy.precision}, Publicity: ${currentPolicy.publicity}`;
+      document.getElementById("policyOutcome").className = "success";
+    } else {
+      colleagueApproval = Math.max(0, colleagueApproval - 5);
+      constituentApproval = Math.max(0, constituentApproval - 5);
+      staff.forEach(m => m.morale = Math.max(0, m.morale - 10));
+      document.getElementById("policyOutcome").textContent = `FAILED! -5 to approvals. Policy Score → Vision: ${currentPolicy.vision}, Research: ${currentPolicy.research}, Precision: ${currentPolicy.precision}, Publicity: ${currentPolicy.publicity}`;
+      document.getElementById("policyOutcome").className = "failure";
+    }
+
+    currentPolicy = null;
+    draftingInProgress = false;
+    contributionLog = [];
+    updateUI();
+  }
+
+  function discardPolicy() {
+    if (!currentPolicy) return;
+
+    staff.forEach(m => m.morale = Math.max(0, m.morale - 5));
+    document.getElementById("policyOutcome").textContent = "Policy discarded. Morale penalties applied.";
+    document.getElementById("policyOutcome").className = "failure";
+
+    currentPolicy = null;
+    draftingInProgress = false;
+    contributionLog = [];
+    updateUI();
+  }
+
+  function dayOff() {
+    if (draftingInProgress) {
+      alert("Can't take a day off while drafting. Please propose or discard the current policy first.");
+      return;
+    }
+    day++;
+    contributionLog.push(`=== Day ${day} ===`);
+    staff.forEach(m => m.morale = Math.min(100, m.morale + 10));
+    contributionLog.push(`Day off taken. Staff morale recovering.`);
+    updateUI();
+  }
+
+  function startAutoAdvance() {
+    if (autoAdvanceInterval) return; // already running
+    autoAdvanceInterval = setInterval(() => {
+      advanceDay();
+    }, 3000);
+  }
+
+  function stopAutoAdvance() {
+    if (autoAdvanceInterval) {
+      clearInterval(autoAdvanceInterval);
+      autoAdvanceInterval = null;
+    }
+  }
+
+  updateUI();
+</script>
+
 </body>
-</html>
-
-  <iframe src="http://ixwiki.com/index.php?title=Urcea&action=render" width="500" height="400"></iframe>
-  
-    <iframe src="http://ixwiki.com/Urcea&action=render" width="500" height="400"></iframe>
-  
-  
-  </body>
 </html>

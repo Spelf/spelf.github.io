@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>OFFICE OF THE ADMINISTRATION — 500-Day Term</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Special+Elite&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#e7e2d4; --paper-dark:#dcd6c4; --ink:#1e1b16; --muted:#6b6355;
+    --rule:#b9b2a0; --rule-dark:#8f8873; --stamp-red:#8b2e2e; --stamp-red-dim:#8b2e2e33;
+    --carbon-blue:#2e4a6b; --carbon-blue-dim:#2e4a6b22; --folder-tan:#c9a66b; --ok-green:#3c5a3c;
+    --purple:#5a3d6b; --purple-dim:#5a3d6b22;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--paper);
+    background-image:repeating-linear-gradient(0deg, transparent, transparent 39px, var(--rule) 40px);
+    color:var(--ink);font-family:'IBM Plex Mono',monospace;font-size:13px;line-height:1.4;}
+  #app{max-width:1180px;margin:0 auto;padding:18px 22px 60px;}
+  header{display:flex;justify-content:space-between;align-items:flex-end;border-bottom:3px double var(--ink);padding-bottom:10px;margin-bottom:14px;}
+  header h1{font-family:'Special Elite',monospace;font-size:20px;letter-spacing:1px;margin:0;}
+  header .sub{color:var(--muted);font-size:11px;letter-spacing:2px;text-transform:uppercase;}
+  .daystamp{position:relative;width:104px;height:104px;border:3px solid var(--stamp-red);border-radius:50%;
+    color:var(--stamp-red);display:flex;flex-direction:column;align-items:center;justify-content:center;
+    transform:rotate(-6deg);font-family:'Special Elite',monospace;flex-shrink:0;transition:transform .15s ease;}
+  .daystamp.press{transform:rotate(-6deg) scale(.9);}
+  .daystamp .dnum{font-size:26px;font-weight:700;line-height:1;}
+  .daystamp .dlabel{font-size:8px;letter-spacing:2px;margin-top:2px;}
+  .daystamp .dmax{font-size:9px;margin-top:2px;opacity:.8;}
+  .grid{display:grid;grid-template-columns:1.15fr .85fr;gap:16px;}
+  @media (max-width:880px){.grid{grid-template-columns:1fr;}}
+  .panel{border:1px solid var(--ink);background:var(--paper-dark);margin-bottom:16px;}
+  .panel > .ptitle{background:var(--ink);color:var(--paper);font-size:11px;letter-spacing:2px;text-transform:uppercase;padding:6px 10px;display:flex;justify-content:space-between;}
+  .panel > .pbody{padding:12px;}
+  .metrics{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;}
+  .metric{border:1px solid var(--rule-dark);padding:8px;background:var(--paper);}
+  .metric .mlabel{font-size:10px;letter-spacing:1.5px;color:var(--muted);text-transform:uppercase;}
+  .metric .mval{font-size:22px;font-weight:700;margin:2px 0 6px;}
+  .bar{height:8px;background:var(--rule);position:relative;overflow:hidden;}
+  .bar > i{display:block;height:100%;background:var(--carbon-blue);transition:width .4s ease;}
+  .bar.danger > i{background:var(--stamp-red);}
+  .bar.warn > i{background:var(--folder-tan);}
+  .metric .mdelta{font-size:10px;color:var(--muted);margin-top:3px;}
+  table{width:100%;border-collapse:collapse;font-size:12px;}
+  th{text-align:left;font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--rule-dark);padding:4px 4px 6px;}
+  td{padding:6px 4px;border-bottom:1px solid var(--rule);vertical-align:top;}
+  .staffname{font-weight:700;}
+  .staffrole{font-size:10px;color:var(--muted);text-transform:capitalize;}
+  .trait-tag{font-size:8px;color:var(--purple);border:1px solid var(--purple);padding:0 3px;margin-left:4px;text-transform:uppercase;}
+  .minibar{width:60px;height:6px;background:var(--rule);position:relative;display:inline-block;vertical-align:middle;margin-right:4px;}
+  .minibar>i{display:block;height:100%;background:var(--carbon-blue);}
+  .minibar.low>i{background:var(--stamp-red);}
+  .minibar.mid>i{background:var(--folder-tan);}
+  .status-tag{display:inline-block;font-size:9px;letter-spacing:1px;text-transform:uppercase;padding:2px 5px;border:1px solid var(--ink);}
+  .status-idle{background:var(--paper);}
+  .status-working{background:var(--carbon-blue);color:var(--paper);}
+  .status-benched{background:var(--stamp-red);color:var(--paper);}
+  .status-peeled{background:var(--folder-tan);}
+  .peelrow{margin-top:4px;display:flex;gap:4px;flex-wrap:wrap;}
+  .tierhead{display:flex;justify-content:space-between;align-items:center;background:var(--folder-tan);padding:4px 8px;font-size:10px;letter-spacing:1px;text-transform:uppercase;margin-top:10px;border:1px solid var(--ink);}
+  .tierhead:first-child{margin-top:0;}
+  .policy-row{display:flex;justify-content:space-between;align-items:center;padding:5px 8px;border:1px solid var(--rule-dark);border-top:none;font-size:11px;background:var(--paper);gap:8px;}
+  .policy-row.drafting{background:var(--carbon-blue-dim);}
+  .policy-row.passed{background:#3c5a3c22;color:var(--ok-green);}
+  .policy-row.passed .pname{text-decoration:line-through;}
+  .policy-row.failed{background:var(--stamp-red-dim);color:var(--stamp-red);}
+  .pname{flex:1;}
+  .pimpact{font-size:9px;border:1px solid currentColor;padding:1px 4px;flex-shrink:0;}
+  .advisory{font-size:9px;color:var(--muted);display:block;margin-top:1px;}
+  button{font-family:'IBM Plex Mono',monospace;background:var(--paper);border:1px solid var(--ink);padding:3px 7px;font-size:10px;letter-spacing:.5px;cursor:pointer;text-transform:uppercase;}
+  button:hover:not(:disabled){background:var(--ink);color:var(--paper);}
+  button:disabled{opacity:.35;cursor:not-allowed;}
+  button.primary{background:var(--carbon-blue);color:var(--paper);border-color:var(--carbon-blue);}
+  button.primary:hover:not(:disabled){background:var(--ink);}
+  button.danger{background:var(--stamp-red);color:var(--paper);border-color:var(--stamp-red);}
+  button.danger:hover:not(:disabled){background:var(--ink);}
+  button.gold{background:var(--folder-tan);border-color:var(--folder-tan);}
+  .draftpanel .dline{display:flex;justify-content:space-between;font-size:11px;margin:6px 0 2px;}
+  .dimgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:8px;}
+  .dimgrid div{border:1px solid var(--rule-dark);background:var(--paper);padding:4px;text-align:center;}
+  .dimgrid .dv{font-size:14px;font-weight:700;}
+  .dimgrid .dl{font-size:8px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;}
+  .quadhint{font-size:10px;color:var(--muted);margin-top:8px;border-top:1px dashed var(--rule-dark);padding-top:6px;}
+  .decisionrow{margin-top:10px;text-align:center;}
+  .noaction{color:var(--muted);font-style:italic;}
+  .proposal-box{border:1px solid var(--purple);background:var(--purple-dim);padding:8px;}
+  #log{max-height:170px;overflow-y:auto;font-size:11px;display:flex;flex-direction:column-reverse;}
+  #log .entry{padding:3px 0;border-bottom:1px dotted var(--rule-dark);}
+  #log .entry.pass{color:var(--ok-green);}
+  #log .entry.fail{color:var(--stamp-red);}
+  #log .entry .tag{color:var(--muted);margin-right:6px;}
+  .advancebar{position:sticky;bottom:0;background:var(--ink);color:var(--paper);display:flex;justify-content:space-between;align-items:center;padding:10px 16px;margin-top:6px;border:1px solid var(--ink);}
+  .advancebar button{background:var(--paper);color:var(--ink);}
+  .advancebar .hint{font-size:10px;color:#bbb;}
+  #modal-overlay{position:fixed;inset:0;background:#00000090;display:none;align-items:center;justify-content:center;z-index:50;}
+  #modal-overlay.show{display:flex;}
+  #modal{background:var(--paper);border:3px double var(--ink);max-width:460px;width:90%;padding:24px;text-align:center;}
+  #modal h2{font-family:'Special Elite',monospace;margin-top:0;}
+  #modal .final-metrics{display:flex;justify-content:space-around;margin:16px 0;font-size:12px;}
+</style>
+</head>
+<body>
+<div id="app">
+
+  <header>
+    <div>
+      <h1>OFFICE OF THE ADMINISTRATION</h1>
+      <div class="sub">Term Management &amp; Legislative Drafting — Case File No. 500-D</div>
+    </div>
+    <div class="daystamp" id="daystamp">
+      <div class="dnum" id="daynum">1</div>
+      <div class="dlabel">DAY</div>
+      <div class="dmax">OF 500</div>
+    </div>
+  </header>
+
+  <div class="panel">
+    <div class="ptitle"><span>Standing — Approval Ledger</span><span id="statusline">TERM IN PROGRESS</span></div>
+    <div class="pbody">
+      <div class="metrics">
+        <div class="metric">
+          <div class="mlabel">Constituent Approval</div>
+          <div class="mval" id="conval">60%</div>
+          <div class="bar" id="conbar"><i style="width:60%"></i></div>
+          <div class="mdelta">Hard loss below 15%. Majority at Day 500 wins the term.</div>
+        </div>
+        <div class="metric">
+          <div class="mlabel">Colleague Approval</div>
+          <div class="mval" id="colval">60%</div>
+          <div class="bar" id="colbar"><i style="width:60%"></i></div>
+          <div class="mdelta">Backing needed to pass major agendas.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid">
+    <div>
+      <div class="panel">
+        <div class="ptitle"><span>Staff Roster</span><span>Peel Off Independently</span></div>
+        <div class="pbody">
+          <table>
+            <thead><tr><th>Staffer</th><th>Skill</th><th>Morale</th><th>Status / Actions</th></tr></thead>
+            <tbody id="stafftable"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="panel draftpanel">
+        <div class="ptitle"><span>Current Draft</span><span id="actiontype">—</span></div>
+        <div class="pbody" id="actionpanel"></div>
+      </div>
+
+      <div class="panel">
+        <div class="ptitle"><span>Legislation From Other Offices</span><span id="propstate">—</span></div>
+        <div class="pbody" id="proposalpanel"></div>
+      </div>
+
+      <div class="panel">
+        <div class="ptitle"><span>Daily Memo</span><span>Log</span></div>
+        <div class="pbody"><div id="log"></div></div>
+      </div>
+    </div>
+
+    <div>
+      <div class="panel">
+        <div class="ptitle"><span>Policy Ledger</span><span id="policycount">0/30 resolved</span></div>
+        <div class="pbody" id="policyledger"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="advancebar">
+    <span class="hint" id="advancehint">Advance the clock whenever you're ready.</span>
+    <button class="primary" id="advancebtn" onclick="advanceDay()">Advance Day →</button>
+  </div>
+
+</div>
+
+<div id="modal-overlay">
+  <div id="modal">
+    <h2 id="modal-title">TERM CONCLUDED</h2>
+    <p id="modal-body"></p>
+    <div class="final-metrics" id="modal-metrics"></div>
+    <button class="primary" onclick="location.reload()">Begin New Term</button>
+  </div>
+</div>
+
+<script>
+/* ================= DATA ================= */
+const STAFF_DEFS = [
+  {id:'s1', name:'Chief of Staff',       dim:'vision',    skill:60, trait:null},
+  {id:'s2', name:'Legislative Director', dim:'research',  skill:90, trait:null},
+  {id:'s3', name:'Counsel',              dim:'precision', skill:78, trait:'perfectionist'},
+  {id:'s4', name:'Comms Director',       dim:'publicity', skill:52, trait:'temperamental'},
+];
+
+const POLICY_DEFS = [
+  ['Pothole Repair Initiative',1],['Streetlight Modernization',1],
+  ['Public Library Hours Extension',1],['Local Farmers Market Permit Reform',2],
+  ['Municipal Recycling Overhaul',2],['Crosswalk Safety Upgrade',2],
+  ['Park Renovation Grant',2],['Small Business Tax Rebate',3],
+  ['Noise Ordinance Update',3],['Community Center Funding Boost',3],
+  ['Public Transit Fare Restructuring',4],['Waste-to-Energy Facility Approval',4],
+  ['Affordable Housing Zoning Pilot',5],['Municipal Broadband Expansion',5],
+  ['Minimum Wage Adjustment',5],['Green Building Code Update',5],
+  ['Police Oversight Board Reform',6],['School Funding Formula Revision',6],
+  ['Rent Stabilization Ordinance',6],['Regional Water Rights Agreement',6],
+  ['Carbon Tax Pilot Program',7],['Immigration Sanctuary Policy',7],
+  ['National Guard Deployment Authority',7],['Universal Pre-K Rollout',8],
+  ['Corporate Subsidy Repeal',8],['Land Value Tax Transition',8],
+  ['Comprehensive Pension Reform',9],['Statewide Criminal Justice Overhaul',9],
+  ['Single-Payer Healthcare Trial',10],['Constitutional Term Limits Amendment',10],
+];
+
+const EXTERNAL_BILL_NAMES = [
+  'H.R. 118 — Cross-District Water Compact','S.B. 44 — Emergency Services Consolidation',
+  'H.R. 302 — Agricultural Subsidy Extension','S.B. 91 — Highway Toll Restructuring',
+  'H.R. 217 — Municipal Bond Oversight Act','S.B. 63 — Judicial Appointment Reform',
+  'H.R. 155 — Cross-Border Trade Facilitation','S.B. 208 — Utility Rate Freeze',
+  'H.R. 71 — Public Sector Pension Adjustment','S.B. 129 — Regional Transit Authority Charter',
+];
+
+const TIME_SINK_EVENTS = [
+  {text:'A leaked memo required damage control.', con:-2, col:0},
+  {text:'Routine constituent casework cleared.', con:2, col:0},
+  {text:'A rival office challenged your record publicly.', con:-1, col:-2},
+  {text:'A local paper ran a favorable profile.', con:2, col:1},
+  {text:'A committee scheduling conflict was resolved diplomatically.', con:0, col:2},
+  {text:'A procedural filing deadline was narrowly met.', con:0, col:1},
+];
+
+function tierOf(impact){ return impact<=3?'tactical': impact<=6?'moderate':'strategic'; }
+function tierLabel(t){ return t==='tactical'?'Tactical (1–3)': t==='moderate'?'Moderate (4–6)':'Strategic (7–10)'; }
+function advisoryFor(t){
+  return t==='strategic' ? 'High risk, high swing.' : (t==='moderate' ? 'Meaningful stakes.' : 'Low-risk groundwork.');
+}
+const PASS_CHANCE_BASE = { 'BR':80, 'TR':55, 'BL':45, 'TL':20 }; // Viability-Support quadrant codes
+
+/* ================= STATE ================= */
+let state = {
+  day: 1, con: 60, col: 60, gameOver: false,
+  staff: STAFF_DEFS.map(s=>({...s, morale:70, peel:null})),
+  policies: POLICY_DEFS.map((p,i)=>({id:'p'+i, name:p[0], impact:p[1], tier:tierOf(p[1]), status:'available', attempts:0})),
+  draft: null,
+  proposal: null,
+  nextProposalDay: rndInit(),
+  comebackCooldownUntil: 0,
+};
+function rndInit(){ return 1 + rnd(30,45); }
+function clamp(v,lo,hi){return Math.max(lo,Math.min(hi,v));}
+function rnd(min,max){return Math.floor(Math.random()*(max-min+1))+min;}
+
+/* ================= DRAFT LIFECYCLE ================= */
+function startDraft(policyId){
+  if(state.draft || state.gameOver) return;
+  const policy = state.policies.find(p=>p.id===policyId);
+  if(!policy || policy.status!=='available') return;
+  const requiredDays = 15 + policy.impact*12;
+  const LD = staffByDim('research'), CO = staffByDim('precision'), CS = staffByDim('vision'), CM = staffByDim('publicity');
+  const expectedV = (LD.skill/2 + CO.skill/2) * requiredDays;
+  const expectedS = (CS.skill/2 + CM.skill/2) * requiredDays;
+  policy.status='drafting';
+  state.draft = {
+    policyId, requiredDays, daysUsed:0,
+    vision:0, research:0, precision:0, publicity:0,
+    parV: expectedV*0.5, parS: expectedS*0.5,
+    ready:false
+  };
+  log(`Drafting begins on "${policy.name}" (Impact ${policy.impact}, ~${requiredDays} staff-days). Office assigned; individuals may peel off as needed.`,'info');
+  render();
+}
+
+function staffByDim(dim){ return state.staff.find(s=>s.dim===dim); }
+
+function peelStaff(staffId, type){
+  const s = state.staff.find(x=>x.id===staffId);
+  if(!s || s.peel || state.gameOver) return;
+  if(type==='research' && s.dim!=='research') return;
+  if(type==='research' && !state.proposal) return;
+  const durations = {dayoff:3, timesink:2, research:1};
+  s.peel = {type, daysLeft:durations[type]};
+  log(`${s.name} peels off to ${type==='dayoff'?'take leave':type==='timesink'?'handle a time sink':'research the pending proposal'}.`,'info');
+  render();
+}
+
+/* ================= TIME ENGINE ================= */
+function advanceDay(){
+  if(state.gameOver) return;
+  document.getElementById('daystamp').classList.add('press');
+  setTimeout(()=>document.getElementById('daystamp').classList.remove('press'),150);
+
+  const policy = state.draft ? state.policies.find(p=>p.id===state.draft.policyId) : null;
+  const drain = policy ? 2 + policy.impact*0.8 : 0;
+
+  state.staff.forEach(s=>{
+    if(s.peel){
+      if(s.peel.type==='dayoff'){ s.morale=clamp(s.morale+16,0,100); }
+      else if(s.peel.type==='timesink'){ /* effect applied on completion */ }
+      s.peel.daysLeft--;
+      if(s.peel.daysLeft<=0){
+        if(s.peel.type==='timesink'){
+          const ev = TIME_SINK_EVENTS[rnd(0,TIME_SINK_EVENTS.length-1)];
+          state.con=clamp(state.con+ev.con,0,100); state.col=clamp(state.col+ev.col,0,100);
+          log(`${s.name} returns from a time sink: ${ev.text}`, (ev.con+ev.col)>=0?'pass':'fail');
+        } else if(s.peel.type==='research' && state.proposal){
+          state.proposal.researched = true;
+          log(`${s.name} finishes researching "${state.proposal.name}" — its true reception is now known.`,'info');
+        } else if(s.peel.type==='dayoff'){
+          log(`${s.name} returns from leave, refreshed.`,'pass');
+        }
+        s.peel = null;
+      }
+      return;
+    }
+    if(!state.draft) return; // idle, nothing to do
+    if(s.morale<=0){
+      s.morale = clamp(s.morale+3,0,100);
+      log(`${s.name} is benched, recovering (+3 morale).`,'info');
+      return;
+    }
+    let contribution = s.skill * (s.morale/100) / 2;
+    if(s.trait==='temperamental') contribution *= (0.7 + Math.random()*0.6);
+    contribution = Math.round(contribution);
+    state.draft[s.dim] += contribution;
+    s.morale = clamp(s.morale - drain,0,100);
+    if(s.morale<=0) log(`${s.name} hits the wall — pencils down, benched until rested.`,'fail');
+  });
+
+  if(state.draft){
+    state.draft.daysUsed++;
+    if(state.draft.daysUsed>=state.draft.requiredDays){
+      state.draft.ready = true;
+      log(`Drafting on "${policy.name}" complete — ready to propose or discard.`,'info');
+    }
+  }
+
+  if(!state.proposal && state.day>=state.nextProposalDay){
+    spawnProposal();
+  }
+
+  checkComeback();
+  state.day++;
+  checkGameEnd();
+  render();
+}
+
+function spawnProposal(){
+  const name = EXTERNAL_BILL_NAMES[rnd(0,EXTERNAL_BILL_NAMES.length-1)];
+  state.proposal = { name, popular: Math.random()<0.5, impact: rnd(2,9), researched:false };
+  log(`A proposal arrives from another office: "${name}". Vote required — research first, or vote blind.`,'info');
+}
+
+function checkComeback(){
+  if(state.con<30 && state.col<30 && state.day>=state.comebackCooldownUntil){
+    state.col = clamp(state.col+10,0,100);
+    state.comebackCooldownUntil = state.day+60;
+    log(`Leadership rallies behind a struggling office — Colleague Approval +10 as re-election looms.`,'pass');
+  }
+}
+
+/* ================= DRAFT RESOLUTION ================= */
+function quadrantOf(draft){
+  const actualV = draft.research + draft.precision;
+  const actualS = draft.vision + draft.publicity;
+  const highV = actualV >= draft.parV;
+  const highS = actualS >= draft.parS;
+  return {code: (highV?'B':'T') + (highS?'R':'L'), highV, highS, actualV, actualS};
+  // B/T = bottom/top on viability axis per notes (bottom=high viability), R/L = right/left on support axis (right=high support)
+}
+
+function proposeCurrentDraft(){
+  if(!state.draft || !state.draft.ready || state.gameOver) return;
+  const draft = state.draft;
+  const policy = state.policies.find(p=>p.id===draft.policyId);
+  const q = quadrantOf(draft);
+  const retry = policy.attempts>0;
+
+  let passChance = PASS_CHANCE_BASE[q.code] + (state.col-50)*0.3;
+  passChance = clamp(passChance,5,95);
+  const passed = Math.random()*100 < passChance;
+
+  const baseMag = 2 + policy.impact*1.2;
+  const failMag = Math.round((2 + policy.impact*1.5) * (retry?1.3:1));
+
+  if(passed){
+    const mag = Math.round(baseMag * (retry?0.7:1));
+    let dCon=0, dCol=0, dMor=0;
+    if(q.code==='TL'){ dCon=-mag; dCol=-mag; dMor=-mag; }
+    else if(q.code==='BL'){ dCon=mag; dCol=-mag; dMor=mag; }
+    else if(q.code==='TR'){ dCon=-mag; dCol=mag; dMor=mag; }
+    else { dCon=mag; dCol=mag; dMor=mag; }
+    state.con=clamp(state.con+dCon,0,100); state.col=clamp(state.col+dCol,0,100);
+    state.staff.forEach(s=>{
+      let m = dMor * (s.trait==='temperamental'?1.5:1);
+      s.morale=clamp(s.morale+m,0,100);
+    });
+    policy.status='passed'; policy.attempts++;
+    log(`PASSED — "${policy.name}" [${quadName(q.code)}] (Con ${fmt(dCon)}, Col ${fmt(dCol)}, Morale ${fmt(dMor)}).`,'pass');
+  } else {
+    state.con=clamp(state.con-failMag,0,100); state.col=clamp(state.col-failMag,0,100);
+    state.staff.forEach(s=>s.morale=clamp(s.morale-failMag,0,100));
+    policy.status='failed'; policy.attempts++;
+    log(`FAILED — "${policy.name}" (Con −${failMag}, Col −${failMag}, Morale −${failMag} across the office).`,'fail');
+  }
+  state.draft = null;
+  checkGameEnd();
+  render();
+}
+
+function discardCurrentDraft(){
+  if(!state.draft || state.gameOver) return;
+  const draft = state.draft;
+  const policy = state.policies.find(p=>p.id===draft.policyId);
+  const prorate = draft.daysUsed / draft.requiredDays;
+  const projParV = draft.parV*prorate, projParS = draft.parS*prorate;
+  const highV = (draft.research+draft.precision) >= projParV;
+  const highS = (draft.vision+draft.publicity) >= projParS;
+
+  state.staff.forEach(s=>{
+    s.morale = clamp(s.morale-5,0,100);
+    if(s.trait==='perfectionist' && !highV && highS){
+      s.morale = clamp(s.morale+10,0,100);
+    }
+  });
+  policy.status='available';
+  log(`Drafting on "${policy.name}" discarded. Partial progress lost.${!highV&&highS?' Counsel is quietly relieved to see a sloppy-but-popular bill killed.':''}`,'fail');
+  state.draft = null;
+  render();
+}
+
+function quadName(code){
+  return {TL:'Weak & Unpopular', BL:'Popular, Poorly Crafted', TR:'Sound, Unpopular', BR:'Strong Across the Board'}[code];
+}
+function fmt(n){ return (n>=0?'+':'')+n; }
+
+/* ================= PROPOSAL VOTING ================= */
+function voteOnProposal(vote){
+  if(!state.proposal || state.gameOver) return;
+  const p = state.proposal;
+  const conMag = Math.round(2 + p.impact*1.2);
+  const colMag = Math.round(2 + p.impact*0.8);
+  let dCon = 0, dCol = 0;
+  if(vote==='yes'){
+    dCon = p.popular ? conMag : -conMag;
+  } else {
+    dCon = p.popular ? -conMag : conMag;
+    dCol = -colMag;
+  }
+  state.con = clamp(state.con+dCon,0,100);
+  state.col = clamp(state.col+dCol,0,100);
+  log(`Voted ${vote.toUpperCase()} on "${p.name}" (${p.researched?(p.popular?'known popular':'known unpopular'):'voted blind'}) — Con ${fmt(dCon)}${dCol?`, Col ${fmt(dCol)}`:''}.`, dCon>=0?'pass':'fail');
+  // release any staffer researching this proposal
+  state.staff.forEach(s=>{ if(s.peel && s.peel.type==='research') s.peel=null; });
+  state.proposal = null;
+  state.nextProposalDay = state.day + rnd(30,45);
+  checkGameEnd();
+  render();
+}
+
+/* ================= END STATE ================= */
+function checkGameEnd(){
+  if(state.gameOver) return;
+  if(state.con<=15){
+    endGame('IMPEACHED', `Constituent approval collapsed to ${state.con}%. The office could not survive the term.`);
+  } else if(state.day>500){
+    if(state.con>=70 && state.col>=60) endGame('LANDSLIDE LEGACY','A dominant term. History will remember this administration well.');
+    else if(state.con>=50 && state.col>=45) endGame('QUIET COMPETENCE','No landslide, but a term that held together and delivered.');
+    else if(state.con>=30) endGame('SURVIVED THE TERM','The office limped to Day 500 with a fractured mandate.');
+    else endGame('VOTED OUT','Approval never recovered. The term ends without a legacy.');
+  }
+}
+function endGame(title, body){
+  state.gameOver = true;
+  document.getElementById('advancebtn').disabled = true;
+  document.getElementById('modal-title').textContent = title;
+  document.getElementById('modal-body').textContent = body;
+  document.getElementById('modal-metrics').innerHTML =
+    `<span>Con: ${state.con}%</span><span>Col: ${state.col}%</span><span>Day: ${Math.min(state.day,500)}</span>`;
+  document.getElementById('modal-overlay').classList.add('show');
+  document.getElementById('statusline').textContent = 'TERM CONCLUDED';
+}
+
+/* ================= LOG ================= */
+function log(text,type){
+  const entry = document.createElement('div');
+  entry.className = 'entry '+(type||'');
+  entry.innerHTML = `<span class="tag">D${state.day}</span>${text}`;
+  document.getElementById('log').prepend(entry);
+}
+
+/* ================= RENDER ================= */
+function barClass(id,val){
+  document.getElementById(id).className = 'bar' + (val<30?' danger':val<50?' warn':'');
+}
+function render(){
+  document.getElementById('daynum').textContent = Math.min(state.day,500);
+  document.getElementById('conval').textContent = state.con+'%';
+  document.getElementById('colval').textContent = state.col+'%';
+  document.getElementById('conbar').querySelector('i').style.width = state.con+'%';
+  document.getElementById('colbar').querySelector('i').style.width = state.col+'%';
+  barClass('conbar',state.con); barClass('colbar',state.col);
+  document.getElementById('advancehint').textContent = state.gameOver ? 'Term concluded.' : 'Advance the clock whenever you\'re ready.';
+
+  renderStaff(); renderPolicies(); renderAction(); renderProposal();
+}
+
+function renderStaff(){
+  const rows = state.staff.map(s=>{
+    const moraleClass = s.morale<25?'low':s.morale<55?'mid':'';
+    let statusTag;
+    if(s.peel) statusTag = `<span class="status-tag status-peeled">${s.peel.type} (${s.peel.daysLeft}d)</span>`;
+    else if(s.morale<=0) statusTag = `<span class="status-tag status-benched">benched</span>`;
+    else if(state.draft) statusTag = `<span class="status-tag status-working">drafting</span>`;
+    else statusTag = `<span class="status-tag status-idle">idle</span>`;
+
+    const canPeel = !s.peel && !state.gameOver;
+    const peelRow = `<div class="peelrow">
+        <button ${canPeel?'':'disabled'} onclick="peelStaff('${s.id}','dayoff')">Day Off</button>
+        <button ${canPeel?'':'disabled'} onclick="peelStaff('${s.id}','timesink')">Time Sink</button>
+        ${s.dim==='research' ? `<button ${canPeel && state.proposal ? '' : 'disabled'} onclick="peelStaff('${s.id}','research')">Research</button>` : ''}
+      </div>`;
+
+    return `<tr>
+      <td><div class="staffname">${s.name}</div><div class="staffrole">${s.dim}${s.trait?`<span class="trait-tag">${s.trait}</span>`:''}</div></td>
+      <td>${s.skill}</td>
+      <td><div class="minibar ${moraleClass}"><i style="width:${s.morale}%"></i></div>${Math.round(s.morale)}</td>
+      <td>${statusTag}${peelRow}</td>
+    </tr>`;
+  }).join('');
+  document.getElementById('stafftable').innerHTML = rows;
+}
+
+function renderPolicies(){
+  const tiers = ['tactical','moderate','strategic'];
+  let html='';
+  let resolved = state.policies.filter(p=>p.status==='passed').length;
+  tiers.forEach(t=>{
+    html += `<div class="tierhead"><span>${tierLabel(t)}</span></div>`;
+    state.policies.filter(p=>p.tier===t).forEach(p=>{
+      const canDraft = !state.draft && (p.status==='available'||p.status==='failed') && !state.gameOver;
+      const label = p.status==='failed' ? 'Retry' : 'Draft';
+      html += `<div class="policy-row ${p.status==='drafting'?'drafting':p.status==='passed'?'passed':p.status==='failed'?'failed':''}">
+        <div class="pname">${p.name}${p.status==='drafting'?' — in progress':''}${p.attempts>0&&p.status!=='passed'?' <span class="advisory">(failed before — retry has diminished upside/worse downside)</span>':''}<span class="advisory">${p.status==='available'?advisoryFor(t):''}</span></div>
+        <div class="pimpact">IMP ${p.impact}</div>
+        ${(p.status==='available'||p.status==='failed') ? `<button ${canDraft?'':'disabled'} onclick="startDraft('${p.id}')">${label}</button>` : ''}
+      </div>`;
+    });
+  });
+  document.getElementById('policyledger').innerHTML = html;
+  document.getElementById('policycount').textContent = `${resolved}/30 passed`;
+}
+
+function renderAction(){
+  const panel = document.getElementById('actionpanel');
+  const typeLabel = document.getElementById('actiontype');
+  const draft = state.draft;
+  if(!draft){
+    typeLabel.textContent = 'None Active';
+    panel.innerHTML = `<p class="noaction">No draft in progress. Pick a policy from the ledger to begin — staff can still peel off for leave, time sinks, or proposal research in the meantime.</p>`;
+    return;
+  }
+  const policy = state.policies.find(p=>p.id===draft.policyId);
+  typeLabel.textContent = `Impact ${policy.impact} · ${draft.daysUsed}/${draft.requiredDays}d`;
+  const pct = clamp((draft.daysUsed/draft.requiredDays)*100,0,100);
+  const q = quadrantOf(draft);
+  panel.innerHTML = `
+    <div class="dline"><b>${policy.name}</b><span>${draft.daysUsed}/${draft.requiredDays} days</span></div>
+    <div class="bar"><i style="width:${pct}%"></i></div>
+    <div class="dimgrid">
+      <div><div class="dv">${draft.vision}</div><div class="dl">Vision</div></div>
+      <div><div class="dv">${draft.research}</div><div class="dl">Research</div></div>
+      <div><div class="dv">${draft.precision}</div><div class="dl">Precision</div></div>
+      <div><div class="dv">${draft.publicity}</div><div class="dl">Publicity</div></div>
+    </div>
+    <div class="quadhint">Viability trending ${q.highV?'HIGH':'LOW'} (par ${Math.round(draft.parV)}) · Support trending ${q.highS?'HIGH':'LOW'} (par ${Math.round(draft.parS)}) — currently reads as "${quadName(q.code)}".</div>
+    <div class="decisionrow">
+      ${draft.ready ? `<button class="primary" onclick="proposeCurrentDraft()">Propose</button>` : ''}
+      <button class="danger" onclick="discardCurrentDraft()">Discard${draft.ready?'':' Early'}</button>
+    </div>
+  `;
+}
+
+function renderProposal(){
+  const panel = document.getElementById('proposalpanel');
+  const state_ = document.getElementById('propstate');
+  const p = state.proposal;
+  if(!p){
+    state_.textContent = 'None Pending';
+    panel.innerHTML = `<p class="noaction">No proposal currently pending a vote. New proposals arrive roughly every 30–45 days.</p>`;
+    return;
+  }
+  state_.textContent = p.researched ? 'Researched' : 'Unresearched';
+  panel.innerHTML = `
+    <div class="proposal-box">
+      <div class="dline"><b>${p.name}</b><span>Impact ${p.impact}</span></div>
+      <div style="margin-top:6px;font-size:11px;">
+        ${p.researched
+          ? `Legislative Director's research indicates this bill is <b>${p.popular?'popular':'unpopular'}</b> with constituents.`
+          : `True reception unknown — vote blind, or assign the Legislative Director to research it first.`}
+      </div>
+      <div class="decisionrow">
+        <button class="primary" onclick="voteOnProposal('yes')">Vote Yes</button>
+        <button class="danger" onclick="voteOnProposal('no')">Vote No</button>
+      </div>
+    </div>`;
+}
+
+/* ================= INIT ================= */
+log('New administration sworn in. Term begins — 500 days on the clock.','info');
+render();
+</script>
+</body>
+</html>

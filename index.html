@@ -85,6 +85,9 @@
   .decisionrow{margin-top:10px;text-align:center;}
   .noaction{color:var(--muted);font-style:italic;}
   .proposal-box{border:1px solid var(--purple);background:var(--purple-dim);padding:8px;}
+  .situation-cards{display:flex;flex-direction:column;gap:8px;}
+  .timesink-box{border:1px solid var(--folder-tan);background:#c9a66b22;padding:8px;font-size:11px;}
+  .deadline{font-size:10px;color:var(--stamp-red);margin-top:4px;}
   #log{max-height:170px;overflow-y:auto;font-size:11px;display:flex;flex-direction:column-reverse;}
   #log .entry{padding:3px 0;border-bottom:1px dotted var(--rule-dark);}
   #log .entry.pass{color:var(--ok-green);}
@@ -135,6 +138,11 @@
     </div>
   </div>
 
+  <div class="panel">
+    <div class="ptitle"><span>Situations</span><span id="propstate">—</span></div>
+    <div class="pbody" id="proposalpanel"></div>
+  </div>
+
   <div class="grid">
     <div>
       <div class="panel">
@@ -150,11 +158,6 @@
       <div class="panel draftpanel">
         <div class="ptitle"><span>Current Draft</span><span id="actiontype">—</span></div>
         <div class="pbody" id="actionpanel"></div>
-      </div>
-
-      <div class="panel">
-        <div class="ptitle"><span>Legislation From Other Offices</span><span id="propstate">—</span></div>
-        <div class="pbody" id="proposalpanel"></div>
       </div>
 
       <div class="panel">
@@ -265,7 +268,7 @@ function startDraft(policyId){
   state.draft = {
     policyId, requiredDays, daysUsed:0,
     vision:0, research:0, precision:0, publicity:0,
-    parV: expectedV*0.5, parS: expectedS*0.5,
+    parV: expectedV*0.35, parS: expectedS*0.35,
     ready:false
   };
   log(`Drafting begins on "${policy.name}" (Impact ${policy.impact}, ~${requiredDays} staff-days). Office assigned; individuals may peel off as needed.`,'info');
@@ -305,8 +308,10 @@ function advanceDay(){
           state.con=clamp(state.con+ev.con,0,100); state.col=clamp(state.col+ev.col,0,100);
           log(`${s.name} returns from a time sink: ${ev.text}`, (ev.con+ev.col)>=0?'pass':'fail');
         } else if(s.peel.type==='research' && state.proposal){
+          const accurate = Math.random() < (s.skill/100);
           state.proposal.researched = true;
-          log(`${s.name} finishes researching "${state.proposal.name}" — its true reception is now known.`,'info');
+          state.proposal.assessedPopular = accurate ? state.proposal.popular : !state.proposal.popular;
+          log(`${s.name} finishes researching "${state.proposal.name}" — their read: likely ${state.proposal.assessedPopular?'popular':'unpopular'} (not guaranteed correct).`,'info');
         } else if(s.peel.type==='dayoff'){
           log(`${s.name} returns from leave, refreshed.`,'pass');
         }
@@ -314,7 +319,10 @@ function advanceDay(){
       }
       return;
     }
-    if(!state.draft) return; // idle, nothing to do
+    if(!state.draft){
+      s.morale = clamp(s.morale+8,0,100); // idle time counts as passive rest, no explicit Day Off needed
+      return;
+    }
     if(s.morale<=0){
       s.morale = clamp(s.morale+3,0,100);
       log(`${s.name} is benched, recovering (+3 morale).`,'info');
@@ -336,6 +344,10 @@ function advanceDay(){
     }
   }
 
+  if(state.proposal && state.day >= state.proposal.deadline){
+    expireProposal();
+  }
+
   if(!state.proposal && state.day>=state.nextProposalDay){
     spawnProposal();
   }
@@ -348,8 +360,8 @@ function advanceDay(){
 
 function spawnProposal(){
   const name = EXTERNAL_BILL_NAMES[rnd(0,EXTERNAL_BILL_NAMES.length-1)];
-  state.proposal = { name, popular: Math.random()<0.5, impact: rnd(2,9), researched:false };
-  log(`A proposal arrives from another office: "${name}". Vote required — research first, or vote blind.`,'info');
+  state.proposal = { name, popular: Math.random()<0.5, impact: rnd(2,9), researched:false, assessedPopular:null, deadline: state.day+20 };
+  log(`A proposal arrives from another office: "${name}". Must be resolved within 20 days.`,'info');
 }
 
 function checkComeback(){
@@ -434,6 +446,19 @@ function quadName(code){
   return {TL:'Weak & Unpopular', BL:'Popular, Poorly Crafted', TR:'Sound, Unpopular', BR:'Strong Across the Board'}[code];
 }
 function fmt(n){ return (n>=0?'+':'')+n; }
+
+function expireProposal(){
+  const p = state.proposal;
+  const conMag = Math.round(2 + p.impact*1.2);
+  const colMag = Math.round(2 + p.impact*0.8) + 2; // extra penalty for missing the deadline entirely
+  const dCon = p.popular ? -conMag : conMag; // treated as an unresolved No — same rule as a No vote
+  state.con = clamp(state.con+dCon,0,100);
+  state.col = clamp(state.col-colMag,0,100);
+  log(`"${p.name}" expired unresolved after 20 days — treated as a lapsed No. Con ${fmt(dCon)}, Col −${colMag}.`,'fail');
+  state.staff.forEach(s=>{ if(s.peel && s.peel.type==='research') s.peel=null; });
+  state.proposal = null;
+  state.nextProposalDay = state.day + rnd(30,45);
+}
 
 /* ================= PROPOSAL VOTING ================= */
 function voteOnProposal(vote){
@@ -584,27 +609,41 @@ function renderAction(){
 
 function renderProposal(){
   const panel = document.getElementById('proposalpanel');
-  const state_ = document.getElementById('propstate');
+  const stateTag = document.getElementById('propstate');
   const p = state.proposal;
-  if(!p){
-    state_.textContent = 'None Pending';
-    panel.innerHTML = `<p class="noaction">No proposal currently pending a vote. New proposals arrive roughly every 30–45 days.</p>`;
-    return;
+  const activeSinks = state.staff.filter(s=>s.peel && s.peel.type==='timesink');
+
+  const cards = [];
+
+  activeSinks.forEach(s=>{
+    cards.push(`<div class="timesink-box"><b>${s.name}</b> is handling a routine office matter — resolves in ${s.peel.daysLeft}d, outcome unknown until then.</div>`);
+  });
+
+  if(p){
+    const daysLeft = p.deadline - state.day;
+    cards.push(`
+      <div class="proposal-box">
+        <div class="dline"><b>${p.name}</b><span>Impact ${p.impact}</span></div>
+        <div style="margin-top:6px;font-size:11px;">
+          ${p.researched
+            ? `Legislative Director's read: this bill is likely <b>${p.assessedPopular?'popular':'unpopular'}</b> with constituents — their assessment isn't infallible.`
+            : `True reception unknown — vote blind, or assign the Legislative Director to research it first.`}
+        </div>
+        <div class="deadline">Must be resolved within ${daysLeft} more day${daysLeft===1?'':'s'}, or it lapses as a missed No.</div>
+        <div class="decisionrow">
+          <button class="primary" onclick="voteOnProposal('yes')">Vote Yes</button>
+          <button class="danger" onclick="voteOnProposal('no')">Vote No</button>
+        </div>
+      </div>`);
   }
-  state_.textContent = p.researched ? 'Researched' : 'Unresearched';
-  panel.innerHTML = `
-    <div class="proposal-box">
-      <div class="dline"><b>${p.name}</b><span>Impact ${p.impact}</span></div>
-      <div style="margin-top:6px;font-size:11px;">
-        ${p.researched
-          ? `Legislative Director's research indicates this bill is <b>${p.popular?'popular':'unpopular'}</b> with constituents.`
-          : `True reception unknown — vote blind, or assign the Legislative Director to research it first.`}
-      </div>
-      <div class="decisionrow">
-        <button class="primary" onclick="voteOnProposal('yes')">Vote Yes</button>
-        <button class="danger" onclick="voteOnProposal('no')">Vote No</button>
-      </div>
-    </div>`;
+
+  if(cards.length===0){
+    stateTag.textContent = 'Quiet';
+    panel.innerHTML = `<p class="noaction">Nothing demanding attention right now. Proposals arrive roughly every 30–45 days; time sinks appear here while staff are handling them.</p>`;
+  } else {
+    stateTag.textContent = p ? (p.researched?'Researched':'Awaiting Response') : 'In Progress';
+    panel.innerHTML = `<div class="situation-cards">${cards.join('')}</div>`;
+  }
 }
 
 /* ================= INIT ================= */

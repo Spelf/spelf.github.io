@@ -193,10 +193,16 @@
 <script>
 /* ================= DATA ================= */
 const STAFF_DEFS = [
-  {id:'s1', name:'Chief of Staff',       dim:'vision',    skill:60, trait:null},
-  {id:'s2', name:'Legislative Director', dim:'research',  skill:90, trait:null},
-  {id:'s3', name:'Counsel',              dim:'precision', skill:78, trait:'perfectionist'},
-  {id:'s4', name:'Comms Director',       dim:'publicity', skill:52, trait:'temperamental'},
+  {id:'s1', roleTitle:'Chief of Staff',       dim:'vision',    skill:60, trait:null},
+  {id:'s2', roleTitle:'Legislative Director', dim:'research',  skill:90, trait:null},
+  {id:'s3', roleTitle:'Counsel',              dim:'precision', skill:78, trait:'perfectionist'},
+  {id:'s4', roleTitle:'Comms Director',       dim:'publicity', skill:52, trait:'temperamental'},
+];
+
+const CANDIDATE_NAMES = [
+  'Maria Chen','James O\'Malley','Aisha Bello','David Kim','Priya Patel',
+  'Robert Nguyen','Sofia Torres','Michael Osei','Elena Petrova','Marcus Webb',
+  'Grace Adebayo','Tomas Reyes','Linda Park','Samuel Okafor','Nadia Hassan'
 ];
 
 const POLICY_DEFS = [
@@ -232,6 +238,7 @@ const TIME_SINK_EVENTS = [
   {text:'A local paper ran a favorable profile.', con:2, col:1},
   {text:'A committee scheduling conflict was resolved diplomatically.', con:0, col:2},
   {text:'A procedural filing deadline was narrowly met.', con:0, col:1},
+  {text:'Successfully negotiated being added as a cosponsor to a popular bill.', con:3, col:1},
 ];
 
 function tierOf(impact){ return impact<=3?'tactical': impact<=6?'moderate':'strategic'; }
@@ -244,12 +251,21 @@ const PASS_CHANCE_BASE = { 'BR':80, 'TR':55, 'BL':45, 'TL':20 }; // Viability-Su
 /* ================= STATE ================= */
 let state = {
   day: 1, con: 60, col: 60, gameOver: false,
-  staff: STAFF_DEFS.map(s=>({...s, morale:70, peel:null})),
+  staff: (()=>{
+    const pool = [...CANDIDATE_NAMES].sort(()=>Math.random()-0.5);
+    return STAFF_DEFS.map((s,i)=>({...s, name:pool[i], morale:70, peel:null, vacant:false, candidates:null}));
+  })(),
   policies: POLICY_DEFS.map((p,i)=>({id:'p'+i, name:p[0], impact:p[1], tier:tierOf(p[1]), status:'available', attempts:0})),
   draft: null,
   proposal: null,
   nextProposalDay: rndInit(),
   comebackCooldownUntil: 0,
+  lastResolvedSituations: [],
+  decayCounter: 0,
+  idleStreak: 0,
+  totalDraftsStarted: 0,
+  totalVotesCast: 0,
+  idleFlavorFired: [],
 };
 function rndInit(){ return 1 + rnd(30,45); }
 function clamp(v,lo,hi){return Math.max(lo,Math.min(hi,v));}
@@ -265,6 +281,7 @@ function startDraft(policyId){
   const expectedV = (LD.skill/2 + CO.skill/2) * requiredDays;
   const expectedS = (CS.skill/2 + CM.skill/2) * requiredDays;
   policy.status='drafting';
+  state.totalDraftsStarted++;
   state.draft = {
     policyId, requiredDays, daysUsed:0,
     vision:0, research:0, precision:0, publicity:0,
@@ -277,9 +294,39 @@ function startDraft(policyId){
 
 function staffByDim(dim){ return state.staff.find(s=>s.dim===dim); }
 
+/* ================= STAFF MANAGER (placeholder) ================= */
+function fireStaff(staffId){
+  const s = state.staff.find(x=>x.id===staffId);
+  if(!s || s.vacant || state.gameOver) return;
+  const firedName = s.name;
+  s.name = '— Vacant —'; s.skill = 0; s.morale = 0; s.trait = null;
+  s.vacant = true; s.peel = null; s.candidates = null;
+  state.staff.forEach(o=>{ if(!o.vacant) o.morale = clamp(o.morale-15,0,100); });
+  log(`${firedName} was let go. Office morale takes a hit across the remaining staff (−15).`,'fail');
+  render();
+}
+
+function hireOpen(staffId){
+  const s = state.staff.find(x=>x.id===staffId);
+  if(!s || !s.vacant || state.gameOver) return;
+  const pool = [...CANDIDATE_NAMES].sort(()=>Math.random()-0.5).slice(0,3);
+  s.candidates = pool.map(n=>({name:n, skill:rnd(35,88)}));
+  render();
+}
+
+function hireSelect(staffId, idx){
+  const s = state.staff.find(x=>x.id===staffId);
+  if(!s || !s.candidates) return;
+  const pick = s.candidates[idx];
+  s.name = pick.name; s.skill = pick.skill; s.morale = 60; s.trait = null;
+  s.vacant = false; s.candidates = null;
+  log(`${pick.name} hired as ${s.roleTitle} (Skill ${pick.skill}).`,'pass');
+  render();
+}
+
 function peelStaff(staffId, type){
   const s = state.staff.find(x=>x.id===staffId);
-  if(!s || s.peel || state.gameOver) return;
+  if(!s || s.peel || s.vacant || state.gameOver) return;
   if(type==='research' && s.dim!=='research') return;
   if(type==='research' && !state.proposal) return;
   const durations = {dayoff:3, timesink:2, research:1};
@@ -293,11 +340,13 @@ function advanceDay(){
   if(state.gameOver) return;
   document.getElementById('daystamp').classList.add('press');
   setTimeout(()=>document.getElementById('daystamp').classList.remove('press'),150);
+  state.lastResolvedSituations = [];
 
   const policy = state.draft ? state.policies.find(p=>p.id===state.draft.policyId) : null;
   const drain = policy ? 2 + policy.impact*0.8 : 0;
 
   state.staff.forEach(s=>{
+    if(s.vacant) return;
     if(s.peel){
       if(s.peel.type==='dayoff'){ s.morale=clamp(s.morale+16,0,100); }
       else if(s.peel.type==='timesink'){ /* effect applied on completion */ }
@@ -307,6 +356,10 @@ function advanceDay(){
           const ev = TIME_SINK_EVENTS[rnd(0,TIME_SINK_EVENTS.length-1)];
           state.con=clamp(state.con+ev.con,0,100); state.col=clamp(state.col+ev.col,0,100);
           log(`${s.name} returns from a time sink: ${ev.text}`, (ev.con+ev.col)>=0?'pass':'fail');
+          state.lastResolvedSituations.push({
+            text:`${s.name} resolved a routine matter: ${ev.text} (Con ${fmt(ev.con)}, Col ${fmt(ev.col)})`,
+            good: (ev.con+ev.col)>=0
+          });
         } else if(s.peel.type==='research' && state.proposal){
           const accurate = Math.random() < (s.skill/100);
           state.proposal.researched = true;
@@ -351,6 +404,27 @@ function advanceDay(){
   if(!state.proposal && state.day>=state.nextProposalDay){
     spawnProposal();
   }
+
+  if(!state.draft){ state.idleStreak++; } else { state.idleStreak = 0; }
+
+  const decayRate = state.idleStreak>=90 ? 3 : state.idleStreak>=45 ? 2 : 1;
+  state.decayCounter += decayRate;
+  if(state.decayCounter>=10){
+    state.con = clamp(state.con-1,0,100);
+    state.decayCounter = 0;
+  }
+
+  const idleBeats = [
+    {days:45, text:'It has been weeks since the office moved on anything. Constituent calls are piling up — but in the cloakroom, colleagues seem perfectly content with the quiet. Public patience is now eroding faster.'},
+    {days:90, text:'Nearly three months with nothing introduced. The drift is accelerating — reacting to other offices\' bills isn\'t the same as doing the job.'},
+    {days:250, text:'Half a term of near-total inaction. Word around Albany is you\'re "easy to work with." Word back home is different, and it\'s getting worse quickly.'},
+  ];
+  idleBeats.forEach(b=>{
+    if(state.idleStreak>=b.days && !state.idleFlavorFired.includes(b.days)){
+      state.idleFlavorFired.push(b.days);
+      log(b.text,'fail');
+    }
+  });
 
   checkComeback();
   state.day++;
@@ -405,6 +479,7 @@ function proposeCurrentDraft(){
     else { dCon=mag; dCol=mag; dMor=mag; }
     state.con=clamp(state.con+dCon,0,100); state.col=clamp(state.col+dCol,0,100);
     state.staff.forEach(s=>{
+      if(s.vacant) return;
       let m = dMor * (s.trait==='temperamental'?1.5:1);
       s.morale=clamp(s.morale+m,0,100);
     });
@@ -412,7 +487,7 @@ function proposeCurrentDraft(){
     log(`PASSED — "${policy.name}" [${quadName(q.code)}] (Con ${fmt(dCon)}, Col ${fmt(dCol)}, Morale ${fmt(dMor)}).`,'pass');
   } else {
     state.con=clamp(state.con-failMag,0,100); state.col=clamp(state.col-failMag,0,100);
-    state.staff.forEach(s=>s.morale=clamp(s.morale-failMag,0,100));
+    state.staff.forEach(s=>{ if(!s.vacant) s.morale=clamp(s.morale-failMag,0,100); });
     policy.status='failed'; policy.attempts++;
     log(`FAILED — "${policy.name}" (Con −${failMag}, Col −${failMag}, Morale −${failMag} across the office).`,'fail');
   }
@@ -431,6 +506,7 @@ function discardCurrentDraft(){
   const highS = (draft.vision+draft.publicity) >= projParS;
 
   state.staff.forEach(s=>{
+    if(s.vacant) return;
     s.morale = clamp(s.morale-5,0,100);
     if(s.trait==='perfectionist' && !highV && highS){
       s.morale = clamp(s.morale+10,0,100);
@@ -455,6 +531,10 @@ function expireProposal(){
   state.con = clamp(state.con+dCon,0,100);
   state.col = clamp(state.col-colMag,0,100);
   log(`"${p.name}" expired unresolved after 20 days — treated as a lapsed No. Con ${fmt(dCon)}, Col −${colMag}.`,'fail');
+  state.lastResolvedSituations.push({
+    text:`"${p.name}" lapsed unresolved — treated as a missed No (Con ${fmt(dCon)}, Col −${colMag}).`,
+    good:false
+  });
   state.staff.forEach(s=>{ if(s.peel && s.peel.type==='research') s.peel=null; });
   state.proposal = null;
   state.nextProposalDay = state.day + rnd(30,45);
@@ -463,6 +543,7 @@ function expireProposal(){
 /* ================= PROPOSAL VOTING ================= */
 function voteOnProposal(vote){
   if(!state.proposal || state.gameOver) return;
+  state.totalVotesCast++;
   const p = state.proposal;
   const conMag = Math.round(2 + p.impact*1.2);
   const colMag = Math.round(2 + p.impact*0.8);
@@ -490,7 +571,11 @@ function checkGameEnd(){
   if(state.con<=15){
     endGame('IMPEACHED', `Constituent approval collapsed to ${state.con}%. The office could not survive the term.`);
   } else if(state.day>500){
-    if(state.con>=70 && state.col>=60) endGame('LANDSLIDE LEGACY','A dominant term. History will remember this administration well.');
+    const wasFixture = state.totalDraftsStarted<=2 && state.col>=55;
+    if(wasFixture && state.con<50){
+      endGame('THE FIXTURE', `You introduced almost no legislation of your own — reacting to other offices' bills doesn't count. Constituent approval fell to ${state.con}% for it — but Colleague Approval held at ${state.col}%, because you never rocked a single boat. The institution rewarded you for staying out of the way. Your constituents did not.`);
+    }
+    else if(state.con>=70 && state.col>=60) endGame('LANDSLIDE LEGACY','A dominant term. History will remember this administration well.');
     else if(state.con>=50 && state.col>=45) endGame('QUIET COMPETENCE','No landslide, but a term that held together and delivered.');
     else if(state.con>=30) endGame('SURVIVED THE TERM','The office limped to Day 500 with a fractured mandate.');
     else endGame('VOTED OUT','Approval never recovered. The term ends without a legacy.');
@@ -533,6 +618,17 @@ function render(){
 
 function renderStaff(){
   const rows = state.staff.map(s=>{
+    if(s.vacant){
+      const hireUI = s.candidates
+        ? `<div class="peelrow">${s.candidates.map((c,i)=>`<button class="gold" onclick="hireSelect('${s.id}',${i})">${c.name} (Sk ${c.skill})</button>`).join('')}</div>`
+        : `<button class="primary" ${state.gameOver?'disabled':''} onclick="hireOpen('${s.id}')">Hire</button>`;
+      return `<tr>
+        <td><div class="staffname">${s.roleTitle}</div><div class="staffrole">— vacant —</div></td>
+        <td>—</td>
+        <td>—</td>
+        <td><span class="status-tag status-benched">vacant</span><div class="peelrow">${hireUI}</div></td>
+      </tr>`;
+    }
     const moraleClass = s.morale<25?'low':s.morale<55?'mid':'';
     let statusTag;
     if(s.peel) statusTag = `<span class="status-tag status-peeled">${s.peel.type} (${s.peel.daysLeft}d)</span>`;
@@ -545,10 +641,11 @@ function renderStaff(){
         <button ${canPeel?'':'disabled'} onclick="peelStaff('${s.id}','dayoff')">Day Off</button>
         <button ${canPeel?'':'disabled'} onclick="peelStaff('${s.id}','timesink')">Time Sink</button>
         ${s.dim==='research' ? `<button ${canPeel && state.proposal ? '' : 'disabled'} onclick="peelStaff('${s.id}','research')">Research</button>` : ''}
+        <button class="danger" ${state.gameOver?'disabled':''} onclick="fireStaff('${s.id}')">Fire</button>
       </div>`;
 
     return `<tr>
-      <td><div class="staffname">${s.name}</div><div class="staffrole">${s.dim}${s.trait?`<span class="trait-tag">${s.trait}</span>`:''}</div></td>
+      <td><div class="staffname">${s.name}</div><div class="staffrole">${s.roleTitle}${s.trait?`<span class="trait-tag">${s.trait}</span>`:''}</div></td>
       <td>${s.skill}</td>
       <td><div class="minibar ${moraleClass}"><i style="width:${s.morale}%"></i></div>${Math.round(s.morale)}</td>
       <td>${statusTag}${peelRow}</td>
@@ -615,6 +712,10 @@ function renderProposal(){
 
   const cards = [];
 
+  state.lastResolvedSituations.forEach(r=>{
+    cards.push(`<div class="timesink-box" style="border-color:${r.good?'var(--ok-green)':'var(--stamp-red)'};background:${r.good?'#3c5a3c22':'var(--stamp-red-dim)'};">${r.text}</div>`);
+  });
+
   activeSinks.forEach(s=>{
     cards.push(`<div class="timesink-box"><b>${s.name}</b> is handling a routine office matter — resolves in ${s.peel.daysLeft}d, outcome unknown until then.</div>`);
   });
@@ -641,7 +742,7 @@ function renderProposal(){
     stateTag.textContent = 'Quiet';
     panel.innerHTML = `<p class="noaction">Nothing demanding attention right now. Proposals arrive roughly every 30–45 days; time sinks appear here while staff are handling them.</p>`;
   } else {
-    stateTag.textContent = p ? (p.researched?'Researched':'Awaiting Response') : 'In Progress';
+    stateTag.textContent = p ? (p.researched?'Researched':'Awaiting Response') : (activeSinks.length?'In Progress':'Resolved Today');
     panel.innerHTML = `<div class="situation-cards">${cards.join('')}</div>`;
   }
 }

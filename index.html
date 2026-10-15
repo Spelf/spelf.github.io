@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>OFFICE OF THE ADMINISTRATION — 500-Day Term</title>
+<title>Legislative Office — 500-Day Term</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Special+Elite&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -18,16 +18,6 @@
     background-image:repeating-linear-gradient(0deg, transparent, transparent 39px, var(--rule) 40px);
     color:var(--ink);font-family:'IBM Plex Mono',monospace;font-size:13px;line-height:1.4;}
   #app{max-width:1180px;margin:0 auto;padding:18px 22px 60px;}
-  header{display:flex;justify-content:space-between;align-items:flex-end;border-bottom:3px double var(--ink);padding-bottom:10px;margin-bottom:14px;}
-  header h1{font-family:'Special Elite',monospace;font-size:20px;letter-spacing:1px;margin:0;}
-  header .sub{color:var(--muted);font-size:11px;letter-spacing:2px;text-transform:uppercase;}
-  .daystamp{position:relative;width:104px;height:104px;border:3px solid var(--stamp-red);border-radius:50%;
-    color:var(--stamp-red);display:flex;flex-direction:column;align-items:center;justify-content:center;
-    transform:rotate(-6deg);font-family:'Special Elite',monospace;flex-shrink:0;transition:transform .15s ease;}
-  .daystamp.press{transform:rotate(-6deg) scale(.9);}
-  .daystamp .dnum{font-size:26px;font-weight:700;line-height:1;}
-  .daystamp .dlabel{font-size:8px;letter-spacing:2px;margin-top:2px;}
-  .daystamp .dmax{font-size:9px;margin-top:2px;opacity:.8;}
   .grid{display:grid;grid-template-columns:1.15fr .85fr;gap:16px;}
   @media (max-width:880px){.grid{grid-template-columns:1fr;}}
   .panel{border:1px solid var(--ink);background:var(--paper-dark);margin-bottom:16px;}
@@ -45,6 +35,79 @@
   table{width:100%;border-collapse:collapse;font-size:12px;}
   th{text-align:left;font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--rule-dark);padding:4px 4px 6px;}
   td{padding:6px 4px;border-bottom:1px solid var(--rule);vertical-align:top;}
+  .portrait{border:1px solid var(--ink);flex-shrink:0;display:block;}
+  /* Bullpen: staff seen across the room from the member's desk (the paper panels below) */
+  #bullpen{background:#cfc8b4;border-bottom:4px solid var(--ink);}
+  .bp-wall{height:34px;background:linear-gradient(#d8d1bd,#c4bda8);border-bottom:6px solid #8f8873;}
+  .controlbar{display:flex;align-items:center;gap:18px;background:var(--ink);color:var(--paper);padding:10px 16px;margin-bottom:16px;border:1px solid var(--ink);}
+  .controlbar button{font-size:13px;padding:10px 18px;white-space:nowrap;}
+  .wallcal{width:58px;flex-shrink:0;background:#f6f1e2;border:1px solid #6b6355;box-shadow:0 2px 4px #0006;text-align:center;font-family:'Special Elite',monospace;color:var(--ink);transition:transform .15s ease;}
+  .wallcal.press{transform:scale(.92);}
+  .wc-top{background:var(--stamp-red);height:9px;display:flex;justify-content:space-around;align-items:center;}
+  .wc-top span{width:4px;height:4px;border-radius:50%;background:#f6f1e2;opacity:.85;}
+  .wc-num{font-size:26px;font-weight:700;line-height:1;margin-top:3px;}
+  .wc-of{font-size:7px;letter-spacing:1.5px;color:var(--stamp-red);margin:1px 0 4px;}
+  .ctl-mid{flex:1;min-width:0;}
+  .ctl-label{display:flex;justify-content:space-between;font-size:10px;letter-spacing:2px;color:#bbb;margin-bottom:4px;}
+  .termtrack{position:relative;height:10px;background:#4a463d;border:1px solid #6b6355;}
+  .termtrack i{display:block;height:100%;width:0;background:#c0503f;transition:width .4s ease;}
+  .termtrack::after{content:"";position:absolute;inset:0;background:repeating-linear-gradient(90deg,transparent 0,transparent calc(20% - 1px),#f6f1e255 calc(20% - 1px),#f6f1e255 20%);pointer-events:none;}
+  .controlbar .hint{font-size:10px;color:#bbb;margin-top:5px;}  .bp-floor{background:repeating-linear-gradient(90deg,#a39c86 0,#a39c86 78px,#968f79 79px,#a39c86 80px);padding:6px 16px 14px;}
+  .bp-row{max-width:1180px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr);gap:14px;}
+  @media (max-width:880px){.bp-row{grid-template-columns:repeat(2,1fr);}}
+  .station{position:relative;display:flex;flex-direction:column;align-items:center;}
+  .seat{position:relative;width:130px;height:92px;display:flex;align-items:flex-end;justify-content:center;}
+  .seat .chair{position:absolute;bottom:0;left:50%;transform:translateX(-50%);}
+  .seat{height:124px;}
+  .seat .person{position:absolute;bottom:-2px;left:50%;transform:translateX(-50%);z-index:1;}
+  .seat .person.slump{bottom:-6px;}
+  .seat .chair{opacity:.9;}
+  .laptop{position:absolute;left:50%;top:0;transform:translate(-50%,-90%);width:58px;height:38px;z-index:4;background:linear-gradient(#a9a498,#8c877b);border:1px solid #5f5a50;border-radius:4px 4px 1px 1px;box-shadow:0 2px 0 #4a463d;}
+  .laptop::before{content:"";position:absolute;left:50%;top:50%;width:8px;height:8px;margin:-4px 0 0 -4px;border-radius:50%;background:#c9c4b6;opacity:.8;}
+  .laptop .led{position:absolute;right:4px;top:3px;width:5px;height:5px;border-radius:50%;background:#555;}
+  .laptop .led.green{background:#4fc76a;box-shadow:0 0 5px #4fc76a;}
+  .laptop .led.amber{background:#d9a441;}
+  .laptop .led.red{background:#c24a3a;}
+  .laptop .led.off{background:#555;}
+  .seat .pop{position:absolute;top:56px;left:calc(50% + 40px);z-index:6;background:var(--paper);border:1px solid var(--ink);padding:0 5px;font-size:12px;font-weight:700;color:var(--ok-green);pointer-events:none;animation:popfloat 1.6s ease-out forwards;}
+  @keyframes popfloat{0%{opacity:0;transform:translateY(10px);}15%{opacity:1;}70%{opacity:1;}100%{opacity:0;transform:translateY(-14px);}}
+  .mf-in{position:absolute;left:0;top:0;transform-origin:0 0;}
+  .mf img{display:block;max-width:none;}
+  .mf-body,.mf-head{position:absolute;left:0;top:0;width:100%;height:100%;}
+  .mf-arm{position:absolute;width:171px;height:142px;}
+  .mf-arm.l{transform-origin:100% 0;transform:rotate(calc(var(--a) * -1deg));}
+  .mf-arm.r{transform-origin:0 0;transform:rotate(calc(var(--a) * 1deg));}
+  .mf-flip{position:relative;width:171px;height:142px;}
+  .mf-arm.typing.l{animation:typel 1.4s ease-in-out infinite;}
+  .mf-arm.typing.r{animation:typer 1.4s ease-in-out infinite .7s;}
+  @keyframes typel{0%,100%{transform:rotate(calc(var(--a) * -1deg));}50%{transform:rotate(calc(var(--a) * -1deg - 2deg));}}
+  @keyframes typer{0%,100%{transform:rotate(calc(var(--a) * 1deg));}50%{transform:rotate(calc(var(--a) * 1deg + 2deg));}}
+  .seat .zzz{position:absolute;top:0;right:4px;z-index:2;font-family:'Special Elite',monospace;color:var(--muted);font-size:12px;}
+  .deskwrap{perspective:360px;width:100%;margin-top:-2px;position:relative;z-index:3;}
+  .desktop{transform:rotateX(10deg);transform-origin:50% 100%;background:linear-gradient(#d3b177,#c0975a);border:1px solid var(--ink);border-bottom:5px solid #7a5a2e;padding:3px 6px 4px;box-shadow:0 5px 6px #0003;}
+  .desktop.empty{background:linear-gradient(#bfb6a0,#aca58f);}
+  .nameplate{background:#efe6c9;border:1px solid #8a7650;border-radius:3px;padding:3px 8px 4px;text-align:center;box-shadow:inset 0 0 0 2px #f6efd8,0 1px 0 #7a5a2e;}
+  .np-name{font-family:'Special Elite',monospace;font-size:15px;line-height:1.15;color:var(--ink);}
+  .np-empty{color:#8a7650;font-size:13px;}
+  .np-role{font-size:9px;letter-spacing:1.6px;text-transform:uppercase;color:#6b5a3a;margin-top:1px;}
+  .dk-strip{display:flex;align-items:center;gap:0;font-size:10px;margin:5px 0 4px;flex-wrap:wrap;}
+  .dk-strip > span{padding:0 9px;border-left:1px solid #8a7650;}
+  .dk-strip > span:first-child{padding-left:0;border-left:none;}
+  .dk-strip > .status-tag{margin-left:auto;padding:1px 5px;border:1px solid var(--ink);font-size:9px;}
+  .dk-morale{display:inline-flex;align-items:center;gap:5px;}
+  .dk-morale .minibar{width:46px;height:8px;flex:none;background:#efe6c9;border:1px solid #5a4520;}
+  .dk-morale .minibar>i{background:#3c5a3c;}
+  .dk-morale .minibar.mid>i{background:#c27d1a;}
+  .dk-morale .minibar.low>i{background:#8b2e2e;}
+  .np-trait{display:inline-block;margin-left:7px;background:var(--purple);color:#fff;font-size:9px;font-weight:700;letter-spacing:.8px;padding:0 7px;border-radius:9px;vertical-align:middle;cursor:help;}
+  .np-clash{margin-left:8px;font-size:10px;letter-spacing:0;text-transform:none;}
+  .dk-actions{display:grid;grid-template-columns:repeat(3,1fr);gap:3px;}
+  .dk-actions .fire{grid-column:3;}
+  .dk-actions button{padding:2px 4px;font-size:9px;width:100%;white-space:nowrap;}
+  .dk-cands{display:flex;flex-direction:column;gap:3px;}
+  .dk-cands button{font-size:9px;text-align:left;}
+  .away-note{font-size:10px;font-style:italic;color:#4a3a1e;}
+  .staffcell{display:flex;gap:8px;align-items:center;}
   .staffname{font-weight:700;}
   .staffrole{font-size:10px;color:var(--muted);text-transform:capitalize;}
   .trait-tag{font-size:8px;color:var(--purple);border:1px solid var(--purple);padding:0 3px;margin-left:4px;text-transform:uppercase;}
@@ -93,92 +156,148 @@
   #log .entry.pass{color:var(--ok-green);}
   #log .entry.fail{color:var(--stamp-red);}
   #log .entry .tag{color:var(--muted);margin-right:6px;}
-  .advancebar{position:sticky;bottom:0;background:var(--ink);color:var(--paper);display:flex;justify-content:space-between;align-items:center;padding:10px 16px;margin-top:6px;border:1px solid var(--ink);}
-  .advancebar button{background:var(--paper);color:var(--ink);}
-  .advancebar .hint{font-size:10px;color:#bbb;}
-  #modal-overlay{position:fixed;inset:0;background:#00000090;display:none;align-items:center;justify-content:center;z-index:50;}
+  #result-overlay{position:fixed;inset:0;background:#000000a0;display:none;align-items:center;justify-content:center;z-index:60;padding:16px;}
+  #result-overlay.show{display:flex;}
+  #result-modal{background:var(--paper);border:3px double var(--ink);max-width:560px;width:100%;padding:20px 22px;max-height:92vh;overflow:auto;}
+  .rs-stamp{display:inline-block;font-family:'Special Elite',monospace;font-size:26px;letter-spacing:3px;border:3px solid currentColor;padding:2px 14px;transform:rotate(-3deg);}
+  .rs-stamp.pass{color:var(--ok-green);}
+  .rs-stamp.fail{color:var(--stamp-red);}
+  .rs-policy{font-weight:700;font-size:14px;margin-top:10px;}
+  .rs-quad{font-size:11px;color:var(--muted);margin-top:2px;}
+  .rs-chips{display:flex;gap:6px;justify-content:center;flex-wrap:wrap;margin:10px 0 12px;}
+  .rs-chip{border:1px solid var(--ink);padding:2px 8px;font-size:11px;background:var(--paper-dark);}
+  .rs-chip.up{color:var(--ok-green);border-color:var(--ok-green);}
+  .rs-chip.down{color:var(--stamp-red);border-color:var(--stamp-red);}
+  .rs-table td{vertical-align:middle;}
+  .attbar{height:7px;background:var(--rule);width:100px;}
+  .attbar>i{display:block;height:100%;background:var(--carbon-blue);}
+  .attnote{font-size:10px;color:var(--muted);margin-top:2px;}
+  .pips{letter-spacing:1px;font-size:11px;color:var(--ok-green);}
+  .pips.p0{color:var(--muted);}
+  .tierup{font-size:10px;font-weight:700;color:var(--purple);margin-top:2px;}  #modal-overlay{position:fixed;inset:0;background:#00000090;display:none;align-items:center;justify-content:center;z-index:50;}
   #modal-overlay.show{display:flex;}
   #modal{background:var(--paper);border:3px double var(--ink);max-width:460px;width:90%;padding:24px;text-align:center;}
   #modal h2{font-family:'Special Elite',monospace;margin-top:0;}
   #modal .final-metrics{display:flex;justify-content:space-around;margin:16px 0;font-size:12px;}
+
+  /* ===== EXPERIMENT: full-screen two-column layout (office left, working sidebar right) ===== */
+  html,body{height:100%;}
+  body{overflow:hidden;}
+  #game{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(380px,1fr);height:100vh;}
+  #stage{display:flex;flex-direction:column;min-width:0;min-height:0;border-right:4px solid var(--ink);
+    background:repeating-linear-gradient(90deg,#a39c86 0,#a39c86 78px,#968f79 79px,#a39c86 80px);} /* one continuous office floor/wall pattern behind bubbles and staff */
+  #approval-row{flex:none;display:flex;align-items:center;justify-content:space-evenly;gap:16px;padding:14px 20px 12px;
+    background:none;}
+  .bubblewrap{display:flex;flex-direction:column;align-items:center;text-align:center;max-width:240px;}
+  .bubble{position:relative;width:128px;height:128px;border-radius:50%;border:3px solid var(--ink);background:#f6f1e2;overflow:hidden;box-shadow:0 3px 7px #0003;}
+  .bubble::after{content:"";position:absolute;left:16%;top:9%;width:30%;height:16%;border-radius:50%;background:#ffffff88;transform:rotate(-30deg);pointer-events:none;}
+  .b-fill{position:absolute;left:0;right:0;bottom:0;height:60%;background:var(--carbon-blue);opacity:.88;transition:height .7s ease,background .3s;}
+  .b-fill::before{content:"";position:absolute;left:-15%;right:-15%;top:-7px;height:14px;border-radius:50%;background:inherit;}
+  .b-fill.warn{background:var(--folder-tan);}
+  .b-fill.danger{background:var(--stamp-red);}
+  .b-tick{position:absolute;left:0;right:0;border-top:1px dashed var(--ink);opacity:.45;pointer-events:none;}
+  .b-tick-red{border-top-color:var(--stamp-red);opacity:.8;}
+  .b-val{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:'Special Elite',monospace;font-size:34px;color:var(--ink);text-shadow:0 0 5px #f6f1e2,0 0 5px #f6f1e2,0 0 5px #f6f1e2;z-index:2;}
+  .b-label{margin-top:8px;font-size:11px;letter-spacing:2px;text-transform:uppercase;font-weight:700;}
+  .b-note{font-size:9px;color:var(--muted);margin-top:2px;}
+  .b-status{font-family:'Special Elite',monospace;font-size:11px;letter-spacing:3px;color:var(--stamp-red);border:2px solid var(--stamp-red);padding:3px 10px;transform:rotate(-4deg);white-space:nowrap;}
+  #bullpen{flex:1;min-height:0;display:flex;flex-direction:column;border-bottom:none;}
+  #bullpen{background:none;}
+  #bullpen .bp-floor{flex:1;min-height:0;display:flex;padding:14px 20px;background:none;}
+  #bullpen .bp-row{flex:1;max-width:none;margin:0;display:grid;grid-template-columns:repeat(2,1fr);grid-template-rows:repeat(2,1fr);gap:6px 20px;--zoom:1;}
+  #bullpen .station{width:330px;place-self:center;transform:scale(var(--zoom));transform-origin:center center;}
+  .controlbar{flex:none;margin:0;border-width:4px 0 0 0;border-color:var(--ink);}
+  #sidebar{display:flex;flex-direction:column;min-height:0;overflow-y:auto;padding:14px;background:var(--paper);
+    background-image:repeating-linear-gradient(0deg,transparent,transparent 39px,var(--rule) 40px);}
+  #sidebar .panel{flex:none;margin-bottom:12px;}
+  #sidebar .panel.grow{flex:1 1 260px;min-height:200px;display:flex;flex-direction:column;}
+  #sidebar .panel.grow > .pbody{flex:1;min-height:0;overflow-y:auto;}
+  #sidebar .panel.memo #log{max-height:150px;}
+  @media (max-width:1000px){
+    body{overflow:auto;}
+    #game{display:block;height:auto;}
+    #stage{border-right:none;}
+    #bullpen .bp-row{grid-template-rows:none;}
+    #sidebar{overflow:visible;}
+  }
 </style>
 </head>
+
 <body>
-<div id="app">
+<div id="game">
 
-  <header>
-    <div>
-      <h1>OFFICE OF THE ADMINISTRATION</h1>
-      <div class="sub">Term Management &amp; Legislative Drafting — Case File No. 500-D</div>
-    </div>
-    <div class="daystamp" id="daystamp">
-      <div class="dnum" id="daynum">1</div>
-      <div class="dlabel">DAY</div>
-      <div class="dmax">OF 500</div>
-    </div>
-  </header>
-
-  <div class="panel">
-    <div class="ptitle"><span>Standing — Approval Ledger</span><span id="statusline">TERM IN PROGRESS</span></div>
-    <div class="pbody">
-      <div class="metrics">
-        <div class="metric">
-          <div class="mlabel">Constituent Approval</div>
-          <div class="mval" id="conval">60%</div>
-          <div class="bar" id="conbar"><i style="width:60%"></i></div>
-          <div class="mdelta">Hard loss below 15%. Majority at Day 500 wins the term.</div>
+  <!-- LEFT: the office (approval bubbles above, 2x2 staff, term progress + advance below) -->
+  <section id="stage">
+    <div id="approval-row">
+      <div class="bubblewrap">
+        <div class="bubble" id="conbubble" title="Majority at Day 500 wins the term. Below 15% is an immediate loss.">
+          <div class="b-fill" id="confill"></div>
+          <div class="b-tick" style="bottom:50%"></div>
+          <div class="b-tick b-tick-red" style="bottom:15%"></div>
+          <div class="b-val" id="conval">60%</div>
         </div>
-        <div class="metric">
-          <div class="mlabel">Colleague Approval</div>
-          <div class="mval" id="colval">60%</div>
-          <div class="bar" id="colbar"><i style="width:60%"></i></div>
-          <div class="mdelta">Backing needed to pass major agendas.</div>
+        <div class="b-label">Constituent Approval</div>
+        <div class="b-note">Win: majority at Day 500 · Lose: below 15%</div>
+      </div>
+      <div class="b-status"><span id="statusline">TERM IN PROGRESS</span></div>
+      <div class="bubblewrap">
+        <div class="bubble" id="colbubble" title="Backing from your colleagues; needed to pass major agendas.">
+          <div class="b-fill" id="colfill"></div>
+          <div class="b-val" id="colval">60%</div>
         </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="panel">
-    <div class="ptitle"><span>Situations</span><span id="propstate">—</span></div>
-    <div class="pbody" id="proposalpanel"></div>
-  </div>
-
-  <div class="grid">
-    <div>
-      <div class="panel">
-        <div class="ptitle"><span>Staff Roster</span><span>Peel Off Independently</span></div>
-        <div class="pbody">
-          <table>
-            <thead><tr><th>Staffer</th><th>Skill</th><th>Morale</th><th>Status / Actions</th></tr></thead>
-            <tbody id="stafftable"></tbody>
-          </table>
-        </div>
-      </div>
-
-      <div class="panel draftpanel">
-        <div class="ptitle"><span>Current Draft</span><span id="actiontype">—</span></div>
-        <div class="pbody" id="actionpanel"></div>
-      </div>
-
-      <div class="panel">
-        <div class="ptitle"><span>Daily Memo</span><span>Log</span></div>
-        <div class="pbody"><div id="log"></div></div>
+        <div class="b-label">Colleague Approval</div>
+        <div class="b-note">Backing needed to pass your agenda</div>
       </div>
     </div>
 
-    <div>
-      <div class="panel">
-        <div class="ptitle"><span>Policy Ledger</span><span id="policycount">0/30 resolved</span></div>
-        <div class="pbody" id="policyledger"></div>
-      </div>
+    <div id="bullpen">
+      <div class="bp-floor"><div class="bp-row" id="bullpen-desks"></div></div>
     </div>
-  </div>
 
-  <div class="advancebar">
-    <span class="hint" id="advancehint">Advance the clock whenever you're ready.</span>
-    <button class="primary" id="advancebtn" onclick="advanceDay()">Advance Day →</button>
-  </div>
+    <div class="controlbar">
+      <div class="wallcal" id="daystamp" title="Current day of the 500-day term">
+        <div class="wc-top"><span></span><span></span></div>
+        <div class="wc-num" id="daynum">1</div>
+        <div class="wc-of">OF 500</div>
+      </div>
+      <div class="ctl-mid">
+        <div class="ctl-label"><span>TERM PROGRESS</span><span id="termpct">0%</span></div>
+        <div class="termtrack" title="Term progress"><i id="termfill"></i></div>
+        <div class="hint" id="advancehint">Advance the clock whenever you're ready.</div>
+      </div>
+      <button class="primary" id="advancebtn" onclick="advanceDay()">Advance Day →</button>
+    </div>
+  </section>
 
+  <!-- RIGHT: working sidebar -->
+  <aside id="sidebar">
+    <div class="panel">
+      <div class="ptitle"><span>Situations</span><span id="propstate">—</span></div>
+      <div class="pbody" id="proposalpanel"></div>
+    </div>
+
+    <div class="panel draftpanel">
+      <div class="ptitle"><span>Current Draft</span><span id="actiontype">—</span></div>
+      <div class="pbody" id="actionpanel"></div>
+    </div>
+
+    <div class="panel grow">
+      <div class="ptitle"><span>Policy Ledger</span><span id="policycount">0/30 resolved</span></div>
+      <div class="pbody" id="policyledger"></div>
+    </div>
+
+    <div class="panel memo">
+      <div class="ptitle"><span>Daily Memo</span><span>Log</span></div>
+      <div class="pbody"><div id="log"></div></div>
+    </div>
+  </aside>
+
+</div>
+<div id="result-overlay">
+  <div id="result-modal">
+    <div id="result-body"></div>
+    <div style="text-align:center;margin-top:14px;"><button class="primary" onclick="closeResultModal()">Continue</button></div>
+  </div>
 </div>
 
 <div id="modal-overlay">
@@ -204,6 +323,17 @@ const CANDIDATE_NAMES = [
   'Robert Nguyen','Sofia Torres','Michael Osei','Elena Petrova','Marcus Webb',
   'Grace Adebayo','Tomas Reyes','Linda Park','Samuel Okafor','Nadia Hassan'
 ];
+// Presentation tags for fictional staff, used only to match names to sprites.
+const NAME_GENDER = {
+  'Maria Chen':'f','James O\'Malley':'m','Aisha Bello':'f','David Kim':'m','Priya Patel':'f',
+  'Robert Nguyen':'m','Sofia Torres':'f','Michael Osei':'m','Elena Petrova':'f','Marcus Webb':'m',
+  'Grace Adebayo':'f','Tomas Reyes':'m','Linda Park':'f','Samuel Okafor':'m','Nadia Hassan':'f'
+};
+function pickName(taken, gender){
+  const ok = CANDIDATE_NAMES.filter(n=>!taken.includes(n) && (!gender || NAME_GENDER[n]===gender));
+  return ok[Math.floor(Math.random()*ok.length)];
+}
+
 
 const POLICY_DEFS = [
   ['Pothole Repair Initiative',1],['Streetlight Modernization',1],
@@ -241,19 +371,31 @@ const TIME_SINK_EVENTS = [
   {text:'Successfully negotiated being added as a cosponsor to a popular bill.', con:3, col:1},
 ];
 
+const SPRITE_DIR = 'sprites/kenney-modular-characters/';
+const HAIR_COLORS = ['Black','Blonde','Brown 1','Brown 2','Grey','Red','Tan','White'];
+const EYE_COLORS = ['Black','Blue','Brown','Green','Pine'];
+const ROLE_SHIRT = {vision:'Navy', research:'Pine', precision:'Grey', publicity:'Red'}; // shirt colour = role
+function lc(c){ return c.toLowerCase().replace(' ',''); }
+// Assembly geometry in source-pixel space (tuned by eye against the pack's sample image)
+const SPRITE_GEOM = {W:520,H:400,cx:260,headTop:60,hairTop:38,baldHairTop:92,neckTop:206,shirtLeft:183,shirtRight:336,shirtTop:222,armIn:26,armTop:190,eyeDx:30,eyeY:156,browY:104,noseY:166,mouthY:197};
+
 function tierOf(impact){ return impact<=3?'tactical': impact<=6?'moderate':'strategic'; }
 function tierLabel(t){ return t==='tactical'?'Tactical (1–3)': t==='moderate'?'Moderate (4–6)':'Strategic (7–10)'; }
 function advisoryFor(t){
   return t==='strategic' ? 'High risk, high swing.' : (t==='moderate' ? 'Meaningful stakes.' : 'Low-risk groundwork.');
 }
-const PASS_CHANCE_BASE = { 'BR':80, 'TR':55, 'BL':45, 'TL':20 }; // Viability-Support quadrant codes
+const PASS_CHANCE_BASE = { 'BR':80, 'BL':55, 'TR':45, 'TL':20 }; // Viability-Support quadrant codes
 
 /* ================= STATE ================= */
 let state = {
   day: 1, con: 60, col: 60, gameOver: false,
   staff: (()=>{
-    const pool = [...CANDIDATE_NAMES].sort(()=>Math.random()-0.5);
-    return STAFF_DEFS.map((s,i)=>({...s, name:pool[i], morale:70, peel:null, vacant:false, candidates:null}));
+    const taken = [];
+    const genders = ['f','f','m','m'].sort(()=>Math.random()-0.5); // starting four: two of each
+    return STAFF_DEFS.map((s,i)=>{
+      const name = pickName(taken, genders[i]); taken.push(name);
+      return {...s, name, morale:70, peel:null, vacant:false, candidates:null, sprite:newSprite(NAME_GENDER[name])}; // appearance matches the name's tag
+    });
   })(),
   policies: POLICY_DEFS.map((p,i)=>({id:'p'+i, name:p[0], impact:p[1], tier:tierOf(p[1]), status:'available', attempts:0})),
   draft: null,
@@ -266,7 +408,173 @@ let state = {
   totalDraftsStarted: 0,
   totalVotesCast: 0,
   idleFlavorFired: [],
+  seminarUsed: false,
+  dayContrib: {},
+  lastDraftResult: null,
 };
+
+/* Skill growth — all constants are placeholder assumptions */
+const TRAIT_GROWTH_MULT = { eager:1.5, stubborn:0.5 };
+const TRAIT_START_OFFSET = { eager:-10, stubborn:10 };
+const SEMINAR_DAYS = 5, SEMINAR_BASE_GAIN = 8;
+function growthMult(s){ return TRAIT_GROWTH_MULT[s.trait] || 1; }
+function applySkillGain(s, raw){
+  const gain = raw * (1 - s.skill/120) * growthMult(s);
+  const before = s.skill;
+  s.skill = clamp(s.skill + gain, 0, 100);
+  return s.skill - before;
+}
+const SKILL_TIERS = [[90,'Expert'],[75,'Skilled'],[60,'Capable'],[40,'Developing'],[0,'Novice']];
+function skillTier(v){ return SKILL_TIERS.find(([min])=>v>=min)[1]; }
+// Growth is shown to the player as a qualitative label, never as raw skill points.
+function growthLabel(gain){
+  if(gain>=3)   return {pips:3,text:'Big leap'};
+  if(gain>=1.5) return {pips:2,text:'Solid growth'};
+  if(gain>=0.5) return {pips:1,text:'Some growth'};
+  return {pips:0,text:'Barely moved'};
+}
+/* Trait batch — placeholder effects */
+const TRAIT_DESC = {
+  temperamental:'Volatile daily contribution; bigger morale swings on passes.',
+  perfectionist:'Morale boost when a popular-but-sloppy draft is discarded.',
+  eager:'Skill growth ×1.5; lower starting skill.',
+  stubborn:'Skill growth ×0.5; higher starting skill.',
+  workhorse:'Morale drains 30% slower while drafting; rest recovers half as fast.',
+  cynic:'Draft pass/fail never moves their morale.',
+  charismatic:'Vision/Publicity ×1.15; Time Sinks skew positive.',
+  insider:'LD: +10 pts Research accuracy. Others: Colleague +1 when a draft passes.',
+  obsessive:'+10% draft contribution; Time Sink during an active draft costs −12 morale.',
+  cautious:'Contribution stays steady even when tired (never drops below 40% morale); trimmed 10% on Impact 7+ drafts.',
+  idealist:'+6 morale when a draft passes with strong Support; −6 morale when you vote No on a bill researched as popular.',
+  loyal:'Takes half the morale hit when someone is fired. After 30 idle days they sour, and after 60 they resign once morale runs out.',
+  networker:'About 5% a day of Colleague +1 while drafting or on a Time Sink.',
+  whistleblower:'−10 morale and a 30% chance to resign if a draft passes with low Viability; likes seeing sloppy bills killed.',
+  'burnout-prone':'+10% contribution to start, falling about 8% with each draft they work, until a Day Off resets it.',
+};
+const TRAIT_SHORT = {
+  temperamental:'Volatile output, big morale swings',
+  perfectionist:'Loves killing sloppy bills',
+  eager:'Learns fast, lower start',
+  stubborn:'Learns slowly, higher start',
+  workhorse:'Tires slowly, rests slowly',
+  cynic:'Pass/fail never moves morale',
+  charismatic:'Boosts Support, lucky Time Sinks',
+  insider:'Research accuracy / Colleague bonus',
+  obsessive:'Focused, hates Time Sinks',
+  cautious:'Steady when tired, slower on big bills',
+  idealist:'Wants strong Support, hates blind No votes',
+  loyal:'Hates being idle, steady in a crisis',
+  networker:'Works the room for Colleague Approval',
+  whistleblower:'Will not stand for sloppy bills',
+  'burnout-prone':'Fast start, fades without a break',
+};
+const HIRE_TRAITS = ['eager','stubborn','workhorse','cynic','charismatic','insider','obsessive','cautious','idealist','loyal','networker','whistleblower','burnout-prone'];
+/* Clash — pairwise trait relationships (placeholder table & numbers) */
+const CLASH_PAIRS = [
+  ['workhorse','obsessive','friction'],
+  ['cynic','perfectionist','friction'],
+  ['eager','stubborn','friction'],
+  ['temperamental','perfectionist','friction'],
+  ['eager','workhorse','synergy'],
+  ['stubborn','perfectionist','synergy'],
+  ['charismatic','insider','synergy'],
+  ['cynic','charismatic','synergy'],
+  // added with the second trait batch (hand-authored, placeholder)
+  ['idealist','cynic','friction'],
+  ['whistleblower','networker','friction'],
+  ['cautious','obsessive','friction'],
+  ['cautious','perfectionist','synergy'],
+  ['loyal','workhorse','synergy'],
+  ['networker','charismatic','synergy'],
+  ['idealist','eager','synergy'],
+];
+const CLASH_FRICTION_DRAIN = 1, CLASH_SYNERGY_DRAIN_CUT = 0.10;
+const CLASH_FLARE_CHANCE = 0.04, CLASH_FLARE_MORALE = -8;
+const CLASH_SYNERGY_CHANCE = 0.03, CLASH_SYNERGY_MORALE = 5;
+function relationOf(ta, tb){
+  if(!ta || !tb) return null;
+  const p = CLASH_PAIRS.find(([x,y])=>(x===ta&&y===tb)||(x===tb&&y===ta));
+  return p ? p[2] : null;
+}
+/* Sprites — modular paper-doll characters (Kenney "Modular Characters", CC0).
+   Each staffer carries a `sprite` record (appearance choices) assigned at creation/hire.
+   The figure is assembled from layered PNGs in sprites/kenney-modular-characters/ and posed
+   with CSS transforms + mouth/eye swaps (the pack has one fixed pose, no real poses). */
+function pickOf(arr){ return arr[rnd(0,arr.length-1)]; }
+function newSprite(gender){
+  const g = gender==='f' ? 'f' : 'm';
+  return {
+    gender:g, skin:rnd(1,8), hairColor:pickOf(HAIR_COLORS),
+    hairStyle: g==='f' ? rnd(1,6) : rnd(1,8),
+    shirtStyle:rnd(1,8), eye:pickOf(EYE_COLORS), eyeSize:pickOf(['large','small']),
+    brow:rnd(1,3), nose:rnd(1,3)
+  };
+}
+// Expression/pose from current state
+function figureState(s){
+  const benched = s.morale<=0, low = s.morale<25;
+  return {
+    benched, low,
+    mouth: benched||low ? 'sad' : s.morale<55 ? 'straight' : 'happy',
+    working: !!state.draft && !benched,
+    armAngle: benched ? 66 : low ? 78 : state.draft ? 84 : 72,
+    headTilt: benched ? 14 : low ? -6 : 0,
+    headDrop: benched ? 14 : low ? 4 : 0,
+    bodyDrop: benched ? 34 : low ? 8 : 0
+  };
+}
+function modularFigure(s, height){
+  const sp = s.sprite, st = figureState(s);
+  const D = SPRITE_DIR;
+  const hp = lc(sp.hairColor);
+  const shirtC = ROLE_SHIRT[s.dim], sc = lc(shirtC);
+  const T = 'Tint '+sp.skin;
+  const hairFile = `Hair/${sp.hairColor}/${hp}${sp.gender==='f'?'Woman':'Man'}${sp.hairStyle}.png`;
+  const im = (p,x,y,w,h,extra)=>`<img src="${D}${p}" style="position:absolute;left:${x}px;top:${y}px;width:${w}px;height:${h}px;${extra||''}" alt="">`;
+  const FG = SPRITE_GEOM, k = height / FG.H;
+  const delay = (s.id.charCodeAt(1)*0.37)%1;
+  const arm = (side)=>{
+    const L = side==='l';
+    const left = L ? FG.shirtLeft+FG.armIn-171 : FG.shirtRight-FG.armIn;
+    return `<div class="mf-arm ${L?'l':'r'}${st.working?' typing':''}" style="--a:${st.armAngle};left:${left}px;top:${FG.armTop}px;animation-delay:-${delay}s;">
+      <div class="mf-flip" style="${L?'':'transform:scaleX(-1);'}">
+        ${im(`Skin/${T}/tint${sp.skin}_arm.png`,0,2,170,136)}
+        ${im(`Shirts/${shirtC}/${sc}Arm_long.png`,0,0,171,142)}
+        ${im(`Skin/${T}/tint${sp.skin}_hand.png`,-14,106,61,71)}
+      </div></div>`;
+  };
+  const eyeBar = (x)=>`<div style="position:absolute;left:${x-12}px;top:${FG.eyeY-2}px;width:24px;height:5px;border-radius:3px;background:#3b3730;"></div>`;
+  const eye = (x)=> st.benched ? eyeBar(x) : im(`Face/Eyes/eye${sp.eye}_${sp.eyeSize}.png`, x-10, FG.eyeY-10, 21, 21);
+  const browFile = `Face/Eyebrows/${hp}Brow${sp.brow}.png`;
+  return `<div class="mf" style="width:${FG.W*k}px;height:${FG.H*k}px;">
+    <div class="mf-in" style="width:${FG.W}px;height:${FG.H}px;transform:scale(${k});">
+     <div class="mf-body" style="transform:translateY(${st.bodyDrop}px);">
+      ${arm('l')}${arm('r')}
+      ${im(`Skin/${T}/tint${sp.skin}_neck.png`, FG.cx-48, FG.neckTop, 96, 37)}
+      ${im(`Shirts/${shirtC}/${sc}Shirt${sp.shirtStyle}.png`, FG.shirtLeft, FG.shirtTop, 153, 174)}
+      <div class="mf-head" style="transform-origin:${FG.cx}px ${FG.headTop+160}px;transform:translateY(${st.headDrop}px) rotate(${st.headTilt}deg);">
+        ${im(`Skin/${T}/tint${sp.skin}_head.png`, FG.cx-86, FG.headTop, 173, 168)}
+        <img src="${D}${hairFile}" style="position:absolute;left:${FG.cx}px;top:${(sp.gender==='m'&&sp.hairStyle===8)?FG.baldHairTop:FG.hairTop}px;transform:translateX(-50%);" alt="">
+        ${eye(FG.cx-FG.eyeDx)}${eye(FG.cx+FG.eyeDx)}
+        ${im(browFile, FG.cx-FG.eyeDx-20, FG.browY, 40, 17)}
+        ${im(browFile, FG.cx+FG.eyeDx-20, FG.browY, 40, 17, 'transform:scaleX(-1);')}
+        ${im(`Face/Nose/${T}/tint${sp.skin}Nose${sp.nose}.png`, FG.cx-14, FG.noseY, 28, 20)}
+        ${im(`Face/Mouth/mouth_${st.mouth}.png`, FG.cx-17, FG.mouthY, 34, 13)}
+      </div>
+     </div>
+    </div></div>`;
+}
+function chairSVG(width){
+  // chair back seen from the front: rounded backrest with cushion, two posts and a base hint
+  const h = Math.round(width*0.8);
+  return `<svg viewBox="0 0 92 74" width="${width}" height="${h}">
+    <rect x="9" y="30" width="6" height="40" fill="#2a2620"/><rect x="77" y="30" width="6" height="40" fill="#2a2620"/>
+    <rect x="4" y="2" width="84" height="56" rx="14" fill="#4a4338"/>
+    <rect x="11" y="9" width="70" height="42" rx="10" fill="#5c5446"/>
+    <rect x="34" y="58" width="24" height="12" fill="#2a2620"/>
+  </svg>`;
+}
+function dispSkill(v){ return Math.round(v); }
 function rndInit(){ return 1 + rnd(30,45); }
 function clamp(v,lo,hi){return Math.max(lo,Math.min(hi,v));}
 function rnd(min,max){return Math.floor(Math.random()*(max-min+1))+min;}
@@ -281,10 +589,12 @@ function startDraft(policyId){
   const expectedV = (LD.skill/2 + CO.skill/2) * requiredDays;
   const expectedS = (CS.skill/2 + CM.skill/2) * requiredDays;
   policy.status='drafting';
+  state.lastDraftResult = null;
   state.totalDraftsStarted++;
   state.draft = {
     policyId, requiredDays, daysUsed:0,
     vision:0, research:0, precision:0, publicity:0,
+    attend:{s1:0,s2:0,s3:0,s4:0},
     parV: expectedV*0.35, parS: expectedS*0.35,
     ready:false
   };
@@ -299,18 +609,37 @@ function fireStaff(staffId){
   const s = state.staff.find(x=>x.id===staffId);
   if(!s || s.vacant || state.gameOver) return;
   const firedName = s.name;
-  s.name = '— Vacant —'; s.skill = 0; s.morale = 0; s.trait = null;
-  s.vacant = true; s.peel = null; s.candidates = null;
-  state.staff.forEach(o=>{ if(!o.vacant) o.morale = clamp(o.morale-15,0,100); });
-  log(`${firedName} was let go. Office morale takes a hit across the remaining staff (−15).`,'fail');
+  s.name = '— Vacant —'; s.skill = 0; s.morale = 0; s.trait = null; s.sprite = null;
+  s.vacant = true; s.peel = null; s.candidates = null; s.fatigue = 0;
+  if(state.draft) state.draft.attend[s.id] = 0;
+  state.staff.forEach(o=>{ if(!o.vacant) o.morale = clamp(o.morale-(o.trait==='loyal'?7:15),0,100); });
+  log(`${firedName} was let go. Office morale takes a hit across the remaining staff (−15; Loyal staff take half).`,'fail');
   render();
+}
+
+// A resignation: like a firing but not a firing - smaller office-wide morale dip
+function removeStaff(s, reason){
+  const name = s.name;
+  s.name = '— Vacant —'; s.skill = 0; s.morale = 0; s.trait = null; s.sprite = null; s.fatigue = 0;
+  s.vacant = true; s.peel = null; s.candidates = null;
+  if(state.draft) state.draft.attend[s.id] = 0;
+  state.staff.forEach(o=>{ if(!o.vacant) o.morale = clamp(o.morale-5,0,100); });
+  log(`${name} resigned: ${reason} The office is rattled (−5 morale).`,'fail');
+  state.lastResolvedSituations.push({text:`${name} resigned — ${reason}`, good:false});
 }
 
 function hireOpen(staffId){
   const s = state.staff.find(x=>x.id===staffId);
   if(!s || !s.vacant || state.gameOver) return;
-  const pool = [...CANDIDATE_NAMES].sort(()=>Math.random()-0.5).slice(0,3);
-  s.candidates = pool.map(n=>({name:n, skill:rnd(35,88)}));
+  const takenNames = state.staff.filter(o=>!o.vacant).map(o=>o.name);
+  s.candidates = [];
+  for(let i=0;i<3;i++){
+    const trait = Math.random()<0.6 ? HIRE_TRAITS[rnd(0,HIRE_TRAITS.length-1)] : null;
+    const base = rnd(35,88);
+    const name = pickName(takenNames.concat(s.candidates.map(c=>c.name)));
+    const sprite = newSprite(NAME_GENDER[name]);
+    s.candidates.push({name, trait, sprite, skill: clamp(base + (TRAIT_START_OFFSET[trait]||0), 20, 95)});
+  }
   render();
 }
 
@@ -318,9 +647,9 @@ function hireSelect(staffId, idx){
   const s = state.staff.find(x=>x.id===staffId);
   if(!s || !s.candidates) return;
   const pick = s.candidates[idx];
-  s.name = pick.name; s.skill = pick.skill; s.morale = 60; s.trait = null;
+  s.name = pick.name; s.skill = pick.skill; s.morale = 60; s.trait = pick.trait; s.sprite = pick.sprite; s.fatigue = 0;
   s.vacant = false; s.candidates = null;
-  log(`${pick.name} hired as ${s.roleTitle} (Skill ${pick.skill}).`,'pass');
+  log(`${pick.name} hired as ${s.roleTitle} (Skill ${pick.skill}${pick.trait?', '+pick.trait:''}).`,'pass');
   render();
 }
 
@@ -329,9 +658,11 @@ function peelStaff(staffId, type){
   if(!s || s.peel || s.vacant || state.gameOver) return;
   if(type==='research' && s.dim!=='research') return;
   if(type==='research' && !state.proposal) return;
-  const durations = {dayoff:3, timesink:2, research:1};
+  if(type==='seminar' && state.seminarUsed) return;
+  const durations = {dayoff:3, timesink:2, research:1, seminar:SEMINAR_DAYS};
   s.peel = {type, daysLeft:durations[type]};
-  log(`${s.name} peels off to ${type==='dayoff'?'take leave':type==='timesink'?'handle a time sink':'research the pending proposal'}.`,'info');
+  if(type==='seminar') state.seminarUsed = true;
+  log(`${s.name} peels off to ${type==='dayoff'?'take leave':type==='timesink'?'handle a time sink':type==='seminar'?'attend a professional seminar (once per term)':'research the pending proposal'}.`,'info');
   render();
 }
 
@@ -341,30 +672,56 @@ function advanceDay(){
   document.getElementById('daystamp').classList.add('press');
   setTimeout(()=>document.getElementById('daystamp').classList.remove('press'),150);
   state.lastResolvedSituations = [];
+  state.dayContrib = {};
 
   const policy = state.draft ? state.policies.find(p=>p.id===state.draft.policyId) : null;
   const drain = policy ? 2 + policy.impact*0.8 : 0;
+  // Clash: only staffers actively working the draft today can interact
+  const working = state.draft
+    ? state.staff.filter(s=>!s.vacant && !s.peel && s.morale>0)
+    : [];
+  const netActive = state.staff.filter(s=>!s.vacant && s.trait==='networker' &&
+    ((state.draft && !s.peel && s.morale>0) || (s.peel && s.peel.type==='timesink')));
+  const quitters = [];
 
   state.staff.forEach(s=>{
     if(s.vacant) return;
     if(s.peel){
-      if(s.peel.type==='dayoff'){ s.morale=clamp(s.morale+16,0,100); }
+      if(s.peel.type==='dayoff'){ s.morale=clamp(s.morale+(s.trait==='workhorse'?8:16),0,100); s.fatigue = 0; }
       else if(s.peel.type==='timesink'){ /* effect applied on completion */ }
       s.peel.daysLeft--;
       if(s.peel.daysLeft<=0){
         if(s.peel.type==='timesink'){
-          const ev = TIME_SINK_EVENTS[rnd(0,TIME_SINK_EVENTS.length-1)];
+          let ev = TIME_SINK_EVENTS[rnd(0,TIME_SINK_EVENTS.length-1)];
+          if(s.trait==='charismatic' && (ev.con+ev.col)<0 && Math.random()<0.5){
+            ev = TIME_SINK_EVENTS[rnd(0,TIME_SINK_EVENTS.length-1)]; // one reroll of a bad outcome
+          }
           state.con=clamp(state.con+ev.con,0,100); state.col=clamp(state.col+ev.col,0,100);
-          log(`${s.name} returns from a time sink: ${ev.text}`, (ev.con+ev.col)>=0?'pass':'fail');
+          let moraleNote = '';
+          if(s.trait==='obsessive' && state.draft){
+            s.morale = clamp(s.morale-12,0,100);
+            moraleNote = ` ${s.name} is rattled at being pulled off the draft (Morale −12).`;
+          }
+          log(`${s.name} returns from a time sink: ${ev.text}${moraleNote}`, (ev.con+ev.col)>=0?'pass':'fail');
           state.lastResolvedSituations.push({
-            text:`${s.name} resolved a routine matter: ${ev.text} (Con ${fmt(ev.con)}, Col ${fmt(ev.col)})`,
+            text:`${s.name} resolved a routine matter: ${ev.text} (Con ${fmt(ev.con)}, Col ${fmt(ev.col)})${moraleNote}`,
             good: (ev.con+ev.col)>=0
           });
         } else if(s.peel.type==='research' && state.proposal){
-          const accurate = Math.random() < (s.skill/100);
+          const accurate = Math.random() < clamp(s.skill/100 + (s.trait==='insider'?0.10:0), 0, 1);
           state.proposal.researched = true;
           state.proposal.assessedPopular = accurate ? state.proposal.popular : !state.proposal.popular;
           log(`${s.name} finishes researching "${state.proposal.name}" — their read: likely ${state.proposal.assessedPopular?'popular':'unpopular'} (not guaranteed correct).`,'info');
+        } else if(s.peel.type==='seminar'){
+          const tierBefore = skillTier(s.skill);
+          const g = applySkillGain(s, SEMINAR_BASE_GAIN);
+          const lab = growthLabel(g), tierNow = skillTier(s.skill);
+          const semNote = `${lab.text.toLowerCase()}${tierNow!==tierBefore?`, now ${tierNow}`:''}`;
+          log(`${s.name} returns from the seminar — ${semNote}.`,'pass');
+          state.lastResolvedSituations.push({
+            text:`${s.name} completed the seminar: ${semNote}.`,
+            good:true
+          });
         } else if(s.peel.type==='dayoff'){
           log(`${s.name} returns from leave, refreshed.`,'pass');
         }
@@ -373,7 +730,13 @@ function advanceDay(){
       return;
     }
     if(!state.draft){
-      s.morale = clamp(s.morale+8,0,100); // idle time counts as passive rest, no explicit Day Off needed
+      if(s.trait==='loyal' && state.idleStreak>=30){
+        // loyal staff sour when the office does nothing: no rest, and morale bleeds
+        s.morale = clamp(s.morale-2,0,100);
+        if(state.idleStreak>=60 && s.morale<=0) quitters.push([s,'restless after months with nothing on the agenda.']);
+        return;
+      }
+      s.morale = clamp(s.morale+(s.trait==='workhorse'?4:8),0,100); // idle time counts as passive rest, no explicit Day Off needed
       return;
     }
     if(s.morale<=0){
@@ -381,13 +744,57 @@ function advanceDay(){
       log(`${s.name} is benched, recovering (+3 morale).`,'info');
       return;
     }
-    let contribution = s.skill * (s.morale/100) / 2;
+    const effMorale = s.trait==='cautious' ? Math.max(s.morale,40) : s.morale;
+    let contribution = s.skill * (effMorale/100) / 2;
+    if(s.trait==='cautious' && policy && policy.impact>=7) contribution *= 0.9;
+    if(s.trait==='burnout-prone') contribution *= Math.max(0.6, 1.10 - 0.08*(s.fatigue||0));
     if(s.trait==='temperamental') contribution *= (0.7 + Math.random()*0.6);
+    if(s.trait==='obsessive') contribution *= 1.1;
+    if(s.trait==='charismatic' && (s.dim==='vision'||s.dim==='publicity')) contribution *= 1.15;
     contribution = Math.round(contribution);
     state.draft[s.dim] += contribution;
-    s.morale = clamp(s.morale - drain,0,100);
+    state.draft.attend[s.id]++;
+    state.dayContrib[s.id] = contribution;
+    s.morale = clamp(s.morale - drain*(s.trait==='workhorse'?0.7:1),0,100);
     if(s.morale<=0) log(`${s.name} hits the wall — pencils down, benched until rested.`,'fail');
   });
+
+  netActive.forEach(s=>{
+    if(Math.random()<0.05){
+      state.col = clamp(state.col+1,0,100);
+      log(`${s.name} worked the room for you (Col +1).`,'pass');
+      state.lastResolvedSituations.push({text:`${s.name} worked the room — Colleague Approval +1.`, good:true});
+    }
+  });
+  quitters.forEach(([s,why])=>{ if(!s.vacant) removeStaff(s, why); });
+
+  for(let i=0;i<working.length;i++){
+    for(let j=i+1;j<working.length;j++){
+      const a = working[i], b = working[j];
+      const rel = relationOf(a.trait, b.trait);
+      if(!rel) continue;
+      if(rel==='friction'){
+        a.morale = clamp(a.morale-CLASH_FRICTION_DRAIN,0,100);
+        b.morale = clamp(b.morale-CLASH_FRICTION_DRAIN,0,100);
+        if(Math.random()<CLASH_FLARE_CHANCE){
+          a.morale = clamp(a.morale+CLASH_FLARE_MORALE,0,100);
+          b.morale = clamp(b.morale+CLASH_FLARE_MORALE,0,100);
+          const t = `${a.name} (${a.trait}) and ${b.name} (${b.trait}) clashed over the draft — both lose ${-CLASH_FLARE_MORALE} morale.`;
+          log(t,'fail');
+          state.lastResolvedSituations.push({text:`⚡ Flare-up: ${t}`, good:false});
+        }
+      } else {
+        [a,b].forEach(s=>{ s.morale = clamp(s.morale + drain*CLASH_SYNERGY_DRAIN_CUT*(s.trait==='workhorse'?0.7:1),0,100); });
+        if(Math.random()<CLASH_SYNERGY_CHANCE){
+          a.morale = clamp(a.morale+CLASH_SYNERGY_MORALE,0,100);
+          b.morale = clamp(b.morale+CLASH_SYNERGY_MORALE,0,100);
+          const t = `${a.name} (${a.trait}) and ${b.name} (${b.trait}) found a rhythm on the draft — both gain ${CLASH_SYNERGY_MORALE} morale.`;
+          log(t,'pass');
+          state.lastResolvedSituations.push({text:`♥ Synergy: ${t}`, good:true});
+        }
+      }
+    }
+  }
 
   if(state.draft){
     state.draft.daysUsed++;
@@ -462,6 +869,7 @@ function proposeCurrentDraft(){
   const policy = state.policies.find(p=>p.id===draft.policyId);
   const q = quadrantOf(draft);
   const retry = policy.attempts>0;
+  let result;
 
   let passChance = PASS_CHANCE_BASE[q.code] + (state.col-50)*0.3;
   passChance = clamp(passChance,5,95);
@@ -474,26 +882,62 @@ function proposeCurrentDraft(){
     const mag = Math.round(baseMag * (retry?0.7:1));
     let dCon=0, dCol=0, dMor=0;
     if(q.code==='TL'){ dCon=-mag; dCol=-mag; dMor=-mag; }
-    else if(q.code==='BL'){ dCon=mag; dCol=-mag; dMor=mag; }
-    else if(q.code==='TR'){ dCon=-mag; dCol=mag; dMor=mag; }
+    else if(q.code==='BL'){ dCon=-mag; dCol=mag; dMor=mag; }   // high viability, low support: sound but unpopular
+    else if(q.code==='TR'){ dCon=mag; dCol=-mag; dMor=mag; }   // low viability, high support: popular but sloppy
     else { dCon=mag; dCol=mag; dMor=mag; }
     state.con=clamp(state.con+dCon,0,100); state.col=clamp(state.col+dCol,0,100);
     state.staff.forEach(s=>{
       if(s.vacant) return;
+      if(s.trait==='cynic') return;
       let m = dMor * (s.trait==='temperamental'?1.5:1);
+      if(s.trait==='idealist' && q.highS) m += 6;
+      if(s.trait==='whistleblower' && !q.highV) m -= 10;
       s.morale=clamp(s.morale+m,0,100);
     });
+    const insiders = state.staff.filter(s=>!s.vacant && s.trait==='insider' && s.dim!=='research');
+    if(insiders.length){
+      state.col = clamp(state.col+insiders.length,0,100);
+      log(`${insiders.map(s=>s.name).join(', ')} worked the cloakroom on the bill's behalf (Col +${insiders.length}).`,'pass');
+    }
     policy.status='passed'; policy.attempts++;
     log(`PASSED — "${policy.name}" [${quadName(q.code)}] (Con ${fmt(dCon)}, Col ${fmt(dCol)}, Morale ${fmt(dMor)}).`,'pass');
+    result = {passed:true, policy:policy.name, quad:quadName(q.code), con:dCon, col:dCol, mor:dMor};
   } else {
     state.con=clamp(state.con-failMag,0,100); state.col=clamp(state.col-failMag,0,100);
-    state.staff.forEach(s=>{ if(!s.vacant) s.morale=clamp(s.morale-failMag,0,100); });
+    state.staff.forEach(s=>{ if(!s.vacant && s.trait!=='cynic') s.morale=clamp(s.morale-failMag,0,100); });
     policy.status='failed'; policy.attempts++;
     log(`FAILED — "${policy.name}" (Con −${failMag}, Col −${failMag}, Morale −${failMag} across the office).`,'fail');
+    result = {passed:false, policy:policy.name, quad:quadName(q.code), con:-failMag, col:-failMag, mor:-failMag};
+  }
+
+  // Skill growth: attendance-weighted, failure teaches more
+  const baseGain = (1 + 0.4*policy.impact) * (passed ? 1 : 1.5);
+  result.growth = [];
+  // attendance = days at the desk contributing / days the draft was actually open
+  // (it can stay open past requiredDays before you propose it)
+  const daysTotal = Math.max(1, draft.daysUsed);
+  state.staff.forEach(s=>{
+    if(s.vacant) return;
+    const daysAt = Math.min(draft.attend[s.id]||0, daysTotal);
+    const attendance = daysAt / daysTotal;
+    const tierBefore = skillTier(s.skill);
+    const gain = applySkillGain(s, baseGain * attendance);
+    result.growth.push({name:s.name, role:s.roleTitle, trait:s.trait, attendance, daysAt, daysTotal,
+      label:growthLabel(gain), tierBefore, tierAfter:skillTier(s.skill)});
+  });
+  log(`Skill growth: ${result.growth.map(g=>`${g.role} — ${g.label.text.toLowerCase()}`).join('; ')}.`,'info');
+  state.lastDraftResult = result;
+  // burnout-prone staff accumulate fatigue for each draft they worked
+  state.staff.forEach(s=>{ if(!s.vacant && s.trait==='burnout-prone' && (draft.attend[s.id]||0)>0) s.fatigue = (s.fatigue||0)+1; });
+  // whistleblowers may resign when a low-viability bill goes through
+  if(passed && !q.highV){
+    state.staff.filter(s=>!s.vacant && s.trait==='whistleblower' && Math.random()<0.3)
+      .forEach(s=>removeStaff(s,'could not stand behind a sloppy bill that went to a vote.'));
   }
   state.draft = null;
   checkGameEnd();
   render();
+  showResultModal(result);
 }
 
 function discardCurrentDraft(){
@@ -511,6 +955,9 @@ function discardCurrentDraft(){
     if(s.trait==='perfectionist' && !highV && highS){
       s.morale = clamp(s.morale+10,0,100);
     }
+    if(s.trait==='whistleblower' && !highV){
+      s.morale = clamp(s.morale+10,0,100);
+    }
   });
   policy.status='available';
   log(`Drafting on "${policy.name}" discarded. Partial progress lost.${!highV&&highS?' Counsel is quietly relieved to see a sloppy-but-popular bill killed.':''}`,'fail');
@@ -519,7 +966,7 @@ function discardCurrentDraft(){
 }
 
 function quadName(code){
-  return {TL:'Weak & Unpopular', BL:'Popular, Poorly Crafted', TR:'Sound, Unpopular', BR:'Strong Across the Board'}[code];
+  return {TL:'Weak & Unpopular', TR:'Popular, Poorly Crafted', BL:'Sound, Unpopular', BR:'Strong Across the Board'}[code];
 }
 function fmt(n){ return (n>=0?'+':'')+n; }
 
@@ -556,6 +1003,9 @@ function voteOnProposal(vote){
   }
   state.con = clamp(state.con+dCon,0,100);
   state.col = clamp(state.col+dCol,0,100);
+  if(vote==='no' && p.researched && p.assessedPopular){
+    state.staff.forEach(s=>{ if(!s.vacant && s.trait==='idealist') s.morale = clamp(s.morale-6,0,100); });
+  }
   log(`Voted ${vote.toUpperCase()} on "${p.name}" (${p.researched?(p.popular?'known popular':'known unpopular'):'voted blind'}) — Con ${fmt(dCon)}${dCol?`, Col ${fmt(dCol)}`:''}.`, dCon>=0?'pass':'fail');
   // release any staffer researching this proposal
   state.staff.forEach(s=>{ if(s.peel && s.peel.type==='research') s.peel=null; });
@@ -564,6 +1014,33 @@ function voteOnProposal(vote){
   checkGameEnd();
   render();
 }
+
+function showResultModal(r){
+  const chip = (label, v)=>`<span class="rs-chip ${v>0?'up':v<0?'down':''}">${label} ${fmt(v)}</span>`;
+  const rows = r.growth.map(g=>{
+    const pct = Math.round(g.attendance*100);
+    const tier = g.tierAfter!==g.tierBefore ? `<div class="tierup">★ Now ${g.tierAfter}</div>` : '';
+    return `<tr>
+      <td><b>${g.name}</b><div class="staffrole">${g.role}${g.trait?` · ${g.trait}`:''}</div></td>
+      <td><div class="attbar"><i style="width:${pct}%"></i></div><div class="attnote">${g.daysAt} of ${g.daysTotal} days at the desk (${pct}%)</div></td>
+      <td><span class="pips p${g.label.pips}">${g.label.pips?'▲'.repeat(g.label.pips):'–'}</span> ${g.label.text}${tier}</td>
+    </tr>`;
+  }).join('');
+  document.getElementById('result-body').innerHTML = `
+    <div style="text-align:center;">
+      <div class="rs-stamp ${r.passed?'pass':'fail'}">${r.passed?'PASSED':'FAILED'}</div>
+      <div class="rs-policy">${r.policy}</div>
+      <div class="rs-quad">Drafted as: ${r.quad}</div>
+      <div class="rs-chips">${chip('Constituents',r.con)}${chip('Colleagues',r.col)}${chip('Morale',r.mor)}</div>
+    </div>
+    <table class="rs-table">
+      <thead><tr><th>Staffer</th><th>Attendance</th><th>Learned</th></tr></thead>
+      <tbody>${rows}</tbody>
+    </table>
+    ${r.passed?'':'<div class="advisory" style="margin-top:8px;">Failure teaches more than success — you can see what went wrong.</div>'}`;
+  document.getElementById('result-overlay').classList.add('show');
+}
+function closeResultModal(){ document.getElementById('result-overlay').classList.remove('show'); }
 
 /* ================= END STATE ================= */
 function checkGameEnd(){
@@ -606,52 +1083,123 @@ function barClass(id,val){
 }
 function render(){
   document.getElementById('daynum').textContent = Math.min(state.day,500);
-  document.getElementById('conval').textContent = state.con+'%';
-  document.getElementById('colval').textContent = state.col+'%';
-  document.getElementById('conbar').querySelector('i').style.width = state.con+'%';
-  document.getElementById('colbar').querySelector('i').style.width = state.col+'%';
-  barClass('conbar',state.con); barClass('colbar',state.col);
+  document.getElementById('termfill').style.width = (Math.min(state.day,500)/500*100)+'%';
+  document.getElementById('termpct').textContent = Math.round(Math.min(state.day,500)/500*100)+'%';
+  setBubble('con', state.con); setBubble('col', state.col);
   document.getElementById('advancehint').textContent = state.gameOver ? 'Term concluded.' : 'Advance the clock whenever you\'re ready.';
 
   renderStaff(); renderPolicies(); renderAction(); renderProposal();
+  fitStations();
 }
 
-function renderStaff(){
-  const rows = state.staff.map(s=>{
-    if(s.vacant){
-      const hireUI = s.candidates
-        ? `<div class="peelrow">${s.candidates.map((c,i)=>`<button class="gold" onclick="hireSelect('${s.id}',${i})">${c.name} (Sk ${c.skill})</button>`).join('')}</div>`
-        : `<button class="primary" ${state.gameOver?'disabled':''} onclick="hireOpen('${s.id}')">Hire</button>`;
-      return `<tr>
-        <td><div class="staffname">${s.roleTitle}</div><div class="staffrole">— vacant —</div></td>
-        <td>—</td>
-        <td>—</td>
-        <td><span class="status-tag status-benched">vacant</span><div class="peelrow">${hireUI}</div></td>
-      </tr>`;
-    }
-    const moraleClass = s.morale<25?'low':s.morale<55?'mid':'';
-    let statusTag;
-    if(s.peel) statusTag = `<span class="status-tag status-peeled">${s.peel.type} (${s.peel.daysLeft}d)</span>`;
-    else if(s.morale<=0) statusTag = `<span class="status-tag status-benched">benched</span>`;
-    else if(state.draft) statusTag = `<span class="status-tag status-working">drafting</span>`;
-    else statusTag = `<span class="status-tag status-idle">idle</span>`;
+// Approval is shown as a liquid-filled bubble; the fill height is the approval percentage
+function setBubble(key, v){
+  document.getElementById(key+'val').textContent = v+'%';
+  const f = document.getElementById(key+'fill');
+  f.style.height = v+'%';
+  f.className = 'b-fill' + (v<30?' danger':v<50?' warn':'');
+}
+// Scale the 2x2 staff stations to fill whatever space the left side has
+function fitStations(){
+  const row = document.getElementById('bullpen-desks');
+  if(!row) return;
+  const r = row.getBoundingClientRect();
+  const cw = (r.width-20)/2, ch = (r.height-6)/2;
+  const z = Math.max(0.7, Math.min(cw/340, ch/265, 1.9));
+  row.style.setProperty('--zoom', z.toFixed(3));
+}
+window.addEventListener('resize', fitStations);
 
-    const canPeel = !s.peel && !state.gameOver;
-    const peelRow = `<div class="peelrow">
+function clashMarks(s){
+  return state.staff.filter(o=>o!==s && !o.vacant).map(o=>{
+    const rel = relationOf(s.trait, o.trait);
+    return rel ? `<span title="${rel==='friction'?'Friction':'Synergy'} with ${o.name} (${o.trait})" style="color:${rel==='friction'?'var(--stamp-red)':'var(--ok-green)'}">${rel==='friction'?'⚡':'♥'}${o.roleTitle.split(' ').map(w=>w[0]).join('')}</span>` : '';
+  }).join(' ');
+}
+function candidateFit(trait, staffId){
+  let f=0, sy=0;
+  state.staff.forEach(o=>{
+    if(o.id===staffId || o.vacant) return;
+    const rel = relationOf(trait, o.trait);
+    if(rel==='friction') f++; else if(rel==='synergy') sy++;
+  });
+  return (f?` ⚡${f}`:'')+(sy?` ♥${sy}`:'');
+}
+// Stations persist between renders: the seat (figure + chair) is only rebuilt when its look changes,
+// so the sprite layers don't reload/blink every day. Only the desk (text, buttons) is rewritten each render.
+function seatSignature(s){
+  if(s.vacant) return 'vacant';
+  if(s.peel) return 'away';
+  const f = figureState(s);
+  return [JSON.stringify(s.sprite), s.dim, f.mouth, f.benched, f.low, f.working, f.armAngle].join('|');
+}
+function seatHTML(s){
+  if(s.vacant || s.peel) return `<span class="chair">${chairSVG(92)}</span>`;
+  const benched = s.morale<=0;
+  return `<span class="chair">${chairSVG(92)}</span><span class="person${benched?' slump':''}">${modularFigure(s,112)}</span>${benched?'<span class="zzz">z z</span>':''}`;
+}
+function deskHTML(s){
+  if(s.vacant){
+    const hireUI = s.candidates
+      ? `<div class="dk-cands">${s.candidates.map((c,i)=>`<button class="gold" onclick="hireSelect('${s.id}',${i})">${c.name} (Sk ${c.skill}${c.trait?', '+c.trait:''})${candidateFit(c.trait, s.id)}</button>`).join('')}</div>`
+      : `<button class="primary" ${state.gameOver?'disabled':''} onclick="hireOpen('${s.id}')">Hire</button>`;
+    return `<div class="desktop empty">
+      <div class="nameplate"><div class="np-name np-empty">Empty chair</div><div class="np-role">${s.roleTitle}</div></div>
+      <div class="dk-strip">${hireUI}</div>
+    </div>`;
+  }
+  const away = !!s.peel, benched = !away && s.morale<=0;
+  const moraleClass = s.morale<25?'low':s.morale<55?'mid':'';
+  let statusTag;
+  if(away) statusTag = `<span class="status-tag status-peeled">${s.peel.type} (${s.peel.daysLeft}d)</span>`;
+  else if(benched) statusTag = `<span class="status-tag status-benched">benched</span>`;
+  else if(state.draft) statusTag = `<span class="status-tag status-working">drafting</span>`;
+  else statusTag = `<span class="status-tag status-idle">idle</span>`;
+  const canPeel = !s.peel && !state.gameOver;
+  const marks = clashMarks(s);
+  // trait pill + clash markers float beside the figure; the desk keeps only the name plate, a stats strip and actions
+  const traitPill = s.trait
+    ? `<span class="np-trait" title="${s.trait[0].toUpperCase()+s.trait.slice(1)}: ${TRAIT_DESC[s.trait]||''}">${s.trait}${s.trait==='burnout-prone'&&s.fatigue?` ×${s.fatigue}`:''}</span>`
+    : '';
+  return `<div class="laptop" title="${away?'Away from desk':benched?'Benched':state.draft?'Working on the draft':'Idle'}"><i class="led ${away?'off':benched?'red':state.draft?'green':'amber'}"></i></div><div class="desktop">
+      <div class="nameplate"><div class="np-name">${s.name}</div><div class="np-role">${s.roleTitle}${traitPill}${marks?`<span class="np-clash">${marks}</span>`:''}</div></div>
+      <div class="dk-strip"><span title="Skill">Skill <b>${dispSkill(s.skill)}</b></span>
+        <span class="dk-morale" title="Morale">Morale <span class="minibar ${moraleClass}"><i style="width:${s.morale}%"></i></span><b>${Math.round(s.morale)}</b></span>${statusTag}</div>
+      <div class="dk-actions">
         <button ${canPeel?'':'disabled'} onclick="peelStaff('${s.id}','dayoff')">Day Off</button>
         <button ${canPeel?'':'disabled'} onclick="peelStaff('${s.id}','timesink')">Time Sink</button>
+        <button class="gold" ${canPeel && !state.seminarUsed?'':'disabled'} title="Once per term; ${SEMINAR_DAYS} days; one-time skill boost" onclick="peelStaff('${s.id}','seminar')">Seminar</button>
         ${s.dim==='research' ? `<button ${canPeel && state.proposal ? '' : 'disabled'} onclick="peelStaff('${s.id}','research')">Research</button>` : ''}
-        <button class="danger" ${state.gameOver?'disabled':''} onclick="fireStaff('${s.id}')">Fire</button>
-      </div>`;
-
-    return `<tr>
-      <td><div class="staffname">${s.name}</div><div class="staffrole">${s.roleTitle}${s.trait?`<span class="trait-tag">${s.trait}</span>`:''}</div></td>
-      <td>${s.skill}</td>
-      <td><div class="minibar ${moraleClass}"><i style="width:${s.morale}%"></i></div>${Math.round(s.morale)}</td>
-      <td>${statusTag}${peelRow}</td>
-    </tr>`;
-  }).join('');
-  document.getElementById('stafftable').innerHTML = rows;
+        <button class="danger fire" ${state.gameOver?'disabled':''} onclick="fireStaff('${s.id}')">Fire</button>
+      </div>
+    </div>`;
+}
+function renderStaff(){
+  const root = document.getElementById('bullpen-desks');
+  state.staff.forEach(s=>{
+    let el = root.querySelector(`[data-sid="${s.id}"]`);
+    if(!el){
+      el = document.createElement('div');
+      el.className = 'station'; el.dataset.sid = s.id;
+      el.innerHTML = '<div class="seat"></div><div class="deskwrap"></div>';
+      root.appendChild(el);
+    }
+    const seat = el.querySelector('.seat');
+    const sig = seatSignature(s);
+    if(el.dataset.sig !== sig){
+      seat.innerHTML = seatHTML(s);
+      el.dataset.sig = sig;
+    }
+    el.querySelector('.deskwrap').innerHTML = deskHTML(s);
+    const gain = state.dayContrib[s.id];
+    if(gain){
+      const pop = document.createElement('span');
+      pop.className = 'pop'; pop.textContent = '+'+gain;
+      seat.appendChild(pop);
+      setTimeout(()=>pop.remove(), 1700);
+    }
+  });
+  state.dayContrib = {}; // popups play once, on the render that follows the day tick
 }
 
 function renderPolicies(){
